@@ -1,0 +1,42 @@
+.stamp{
+    position: relative;
+    font-size: .5em;
+    user-select: none;
+    vertical-align: middle;
+    &__tooltip{
+        visibility: hidden;
+        width: 120px;
+        text-align: center;
+        padding: 5px 0;
+        border-radius: 6px;
+        position: absolute;
+        z-index: 1;
+        &--verified{
+            background-color: $verifiedTooltipBG;
+            color: $verifiedTooltipText;
+            width: 150px;
+            @include tablet-above{
+                top: -5px;
+                left: 105%; 
+            }
+        }
+        @include tablet-below{
+            &--mobile{
+                bottom: 105%;
+                right: -5px;
+            }
+        }
+        
+    }
+    &--verified{
+        padding: 5px;
+        color: $verifiedText;
+        background-color:$verifiedBG;
+        border-radius: 10px;
+        &:hover{
+            .stamp__tooltip{
+                visibility: visible;
+            }
+        }
+    }
+}

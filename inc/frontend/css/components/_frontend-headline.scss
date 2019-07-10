@@ -1,0 +1,113 @@
+.profile-headline{
+
+    padding: 10px 0;
+    background-color: transparent;
+    width: 100%;
+    // Base Properties
+    &__figure{
+        width: 100%;
+        text-align: center;
+        margin: 0;
+        width: 100%;
+        @include tablet-above{
+            height: 200px;
+            text-align: initial;
+        }
+    }
+    &__img{
+        width: 100px;
+        height: 100px;
+        &--rounded{
+            border-radius: 50%;
+            border: 3px solid white;
+            box-shadow: 0 5px 20px 1px gray;
+        }
+        @include tablet-above{
+            position: relative;
+            $top: calc(200px - 106px/2);
+            top: $top;
+            left: 10%;
+        }  
+    }
+    &__username{
+        margin: 0;
+        text-align: center;
+        @include tablet-above{
+            text-align: left;
+        }
+    }
+    &__tagline{
+        margin: 0;
+        text-align: center;
+        @include tablet-above{
+            text-align: left;
+        }
+    }
+
+    &__grid-wrap{
+        background-color: white;
+        box-shadow: 0 5px 10px -5px gray;
+        padding: 8px;
+        margin: 0 8px;
+        border-radius: 30px;
+        @include tablet-above{
+            display: grid;
+            grid-template-columns: 30% 55% 15%;
+        }
+    }
+
+    &__grid-area-text{
+        grid-column: 2 / 3;
+    }
+
+    &__grid-area-social{
+        grid-column: 3 /4
+    }
+
+}
+
+.contact-info{
+    $self: &;
+
+    display: flex;
+
+    &--mobile-grid{ // "mobile-" modifiers are meant to apply to mobile only
+        @include tablet-below{
+            display: grid;
+            padding: 20px 0;
+            font-size: 13px;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: 1fr 1fr;
+            grid-template-areas: "website phone"
+                                "email email"
+                                ;
+
+            #{ $self }__block-wrap{
+                text-align: center;
+                &--1{
+                    grid-area: website;
+                }
+                &--2{
+                    grid-area: phone;
+                }
+                &--3{
+                    grid-area: email;
+                }
+            }   
+        }
+                              
+    }
+}
+
+
+.social-profiles{
+    &--flex{
+        display: flex;
+        justify-content: center;
+        @include tablet-above{
+            flex-direction: column;
+            align-self: flex-end;
+            padding-right: 5px;
+        }
+    }
+}

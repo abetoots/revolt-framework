@@ -1,0 +1,119 @@
+.touch-button{
+    $self: &;
+
+    //Base properties
+    &__link{
+        text-decoration: none;
+    }
+    &__button{
+        font-family: inherit;
+        font-size: 13px;
+        border: none;
+        cursor: pointer;
+    }
+    &__text{
+        margin: 0;
+    }
+
+    //Component Modifiers
+    &--align-center{ 
+        align-self: center;
+    }
+    &--text-center{
+        text-align: center;
+    }
+    &--mobile-only{
+        @include tablet-above{
+            display: none;
+        }
+    }
+    
+    //Button Modifiers Only
+    &__button{
+        // To prevent wrapping
+        &--width-max{ 
+            min-width: max-content;
+        }
+
+        /* Specific Buttons */
+        // Post a Job Button
+        &--post{
+            font-size: 20px;
+            border-radius: 5px;
+            padding: 13px 8px;
+            background-color: #180528;
+            color: white;
+            box-shadow: 0 6px 10px -6px gray;
+            transition: .3s all cubic-bezier(0.77, 0.2, 0.1, 1);
+            &:hover{
+                background-color: white;
+                color: black;
+            }
+        }
+
+        // Manage Jobs and Schedule Button
+        &--manage, &--schedule{
+            display: none;
+            @include tablet-above{
+                display: initial;
+                background-color: transparent;
+                border: 2px solid #404040;
+                border-radius: 40px;
+                color: #404040;
+                padding: 8px;
+                transition: .3s all cubic-bezier(0.77, 0.2, 0.1, 1);
+                &:focus{
+                    border-color: #404040;
+                }
+                &:hover{
+                    border-color: white;
+                    background-color: white;
+                }
+            }
+        }
+
+        // Used for toggle visible elements on mobile
+        // Usually targeted with javascript
+        &--mobile-helper{// "mobile-" modifiers are coupled with "mobile-only" component 
+            background-color: transparent;
+            width: 100%;
+        }
+
+    }
+
+    /* Component Specific Buttons */
+    // For targeting all buttons inside a component
+    &--email{
+        #{ $self }__button{
+            color: black;
+            background-color: transparent;
+        }
+    }
+
+    &--social-profiles{
+        text-align: right;
+        @include tablet-above{
+            margin-bottom: 5%;
+        }
+        #{ $self }__button{
+            background-color: transparent;
+            border-radius: 50%;
+            border-width: 2px;
+            border-style: solid;
+            margin: 0 5px;
+            width: 30px;
+            &--fb{
+                color: #3B5998;
+            }
+
+            &--twitter{
+                color: #1DA1F2;
+            }
+
+            &--linkedin{
+                color: black;
+            }
+        }
+    }
+
+}

@@ -1,0 +1,230 @@
+$switch-width: 35px;
+$switch-height: 20px;
+
+$slider: 10px;
+
+$slideTranslate: 15px;
+
+$outputFontSize: 1em;
+$iconFontSize: 1em;
+
+body.is-lofi-options {
+  background-color: white;
+}
+
+.lofi-admin {
+  .wp-menu-image img {
+    padding: 7px 0;
+    height: auto;
+    width: 20px;
+  }
+}
+
+#menu-posts-lofi-job-post {
+  .wp-menu-name {
+    color: aquamarine;
+    font-weight: 700;
+  }
+}
+
+/*============= THEME OPTIONS PAGE ===================== */
+.switch-container {
+  user-select: none;
+}
+
+.format-switch {
+  position: relative;
+  display: inline-block;
+  width: $switch-width;
+  height: $switch-height;
+}
+
+.format-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  border-radius: 34px;
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  transition: 0.3s;
+}
+
+.slider:before {
+  border-radius: 50%;
+  position: absolute;
+  content: "";
+  height: $slider;
+  width: $slider;
+  left: 4px;
+  top: 5px;
+  background-color: white;
+  transition: 0.3s ease-in-out;
+}
+
+.switch-input:checked+.slider {
+  background-color: #2196f3;
+}
+
+.switch-input:focus+.slider {
+  box-shadow: 0 0 1px #2196f3;
+}
+
+.switch-input:checked+.slider:before {
+  transform: translateX($slideTranslate);
+}
+
+.format-text {
+  display: inline-block;
+}
+
+/*============= PROFILE PAGE ===================== */
+.profile-wrapper {
+  display: inline-block;
+  vertical-align: top;
+  margin-right: 20px;
+  width: 300px;
+
+  .preview-container {
+    background-color: black;
+    padding: 15px;
+  }
+
+  .preview-text {
+    font-style: italic;
+    text-align: center;
+    margin-bottom: 30px;
+  }
+
+  .profile-username,
+  .profile-description {
+    color: white;
+    text-align: center;
+  }
+}
+
+.profile-username {
+  font-size: 20px;
+}
+
+.profile-description {
+  font-size: 10px;
+  font-style: italic;
+}
+
+.image-container {
+  margin: 0 auto;
+  height: 100px;
+  width: 100px;
+
+  figure {
+    height: 100%;
+    width: 100%;
+  }
+
+  .profile-image {
+    width: 100%;
+    border-radius: 50%;
+  }
+}
+
+.form-inline,
+.lofi-job-board-form {
+  display: inline-block;
+
+  #remove-button {
+    background-color: #d9534f;
+    color: white;
+    font-weight: 700;
+    box-shadow: none;
+
+    &:hover {
+      background-color: #c9302c;
+    }
+  }
+}
+
+/*======================== PREMIUM PACKAGES COLUMNS ===================== */
+
+.column-bg-color,
+.column-text-color {
+  width: 50px;
+}
+
+.premium-color-block {
+  width: 100%;
+  height: 50px;
+}
+
+.lofi-premium-output {
+  padding: 5px;
+  font-weight: 700;
+  border-radius: 30px;
+  width: fit-content;
+  text-align: center;
+  cursor: pointer;
+  font-size: $outputFontSize;
+
+  transition: all 0.3s ease-in;
+
+  &.lofi-initial-terms {
+    display: flex;
+    justify-content: center;
+  }
+}
+
+.lofi-output-icon::before {
+  font-family: dashicons;
+  font-size: $iconFontSize;
+}
+
+.lofi-featured::before {
+  content: "\f155";
+}
+
+.lofi-urgent::before {
+  content: "\f534";
+}
+
+.lofi-with-benefits::before {
+  content: "\f487";
+}
+
+.lofi-verified::before {
+  content: "\f147";
+}
+
+/* Salary Fields */
+
+.salary-negotiable {
+  padding-right: 30px;
+}
+
+.salary-container {
+  display: flex;
+
+  .field-1 {
+    margin-right: 20px;
+  }
+
+  .salary-separator {
+    padding-right: 20px;
+  }
+
+  .field-2 {
+    align-self: flex-end;
+  }
+}
+
+@media (max-width: 768px) {
+  .hide-me-mobile {
+    display: none;
+  }
+}

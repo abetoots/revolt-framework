@@ -1,0 +1,212 @@
+.stats {
+    padding: 0 20px 15px;
+
+    @include tablet-above {
+        grid-area: stats;
+    }
+
+    &__container {
+        display: flex;
+        justify-content: space-between;
+        height: 90px;
+        margin: 10px 0;
+        padding: 10px 10px;
+        border-radius: 10px;
+
+        &--style-1 {
+            background-image: linear-gradient(to right,
+                    #A991FA,
+                    #9FACFD);
+        }
+
+        &--style-2 {
+            background-image: linear-gradient(to right,
+                    #B0AAFE,
+                    #DFB7FE);
+        }
+
+        &--style-3 {
+            background-image: linear-gradient(to right,
+                    #92BEF9,
+                    #98D6F2);
+        }
+    }
+
+    &__text {
+        margin: 0;
+        color: white;
+    }
+
+    &__block-wrap {
+        align-self: center;
+    }
+
+    &__icon-wrap {
+        font-size: 1.6rem;
+    }
+}
+
+.notifications {
+    @include tablet-above {
+        grid-area: notifications;
+    }
+
+    background-color: #EFF3F6;
+
+    &__text-container {
+        border-radius: 5px;
+        display: flex;
+        justify-content: space-between;
+        background-color: $textContainerBG;
+        border-bottom-left-radius: $textBottomLeftRadius;
+        padding: 5px 0 5px 25px;
+        margin: 0 10px 10px;
+        overflow: hidden;
+
+        @include tablet-above {
+            margin: 0 0 10px 0;
+        }
+    }
+
+    &__area-container {
+        height: 0;
+        overflow: hidden;
+        transition: .3s all ease-in;
+
+        @include desktop-above {
+            height: initial;
+        }
+    }
+
+    &__button {
+        border: none;
+        background-color: transparent;
+        color: white;
+        cursor: pointer;
+    }
+
+    &__text {
+        margin: 0;
+        padding-left: $textPaddingLeft;
+        color: $textContainerCOLOR;
+    }
+}
+
+.email {
+    @include tablet-above {
+        grid-area: email;
+    }
+
+    background-color: #EFF3F6;
+
+    &__container {
+        margin: 0 10px 10px;
+        border-radius: 5px;
+
+        @include tablet-above {
+            margin: 0 0 10px 0;
+        }
+    }
+
+    &__text-container {
+        display: flex;
+        justify-content: space-between;
+        background-color: $textContainerBG;
+        border-bottom-left-radius: $textBottomLeftRadius;
+        padding: 5px 0 5px 25px;
+        overflow: hidden;
+    }
+
+    &__text {
+        margin: 0;
+        padding-left: $textPaddingLeft;
+        color: $textContainerCOLOR;
+    }
+
+    &__button {
+        border: none;
+        background-color: transparent;
+        color: white;
+        cursor: pointer;
+    }
+
+    &__targets-container {
+        height: 0;
+        overflow: hidden;
+        transition: .3s all ease-in;
+    }
+
+    &__height {
+        display: flex;
+        height: 80px;
+        justify-content: space-evenly;
+        align-items: center;
+    }
+}
+
+.recent {
+
+    @include tablet-above {
+        grid-area: recent;
+    }
+
+    background-color: #EFF3F6;
+
+    &__container {
+        margin: 0 10px 10px;
+        border-radius: 5px;
+        overflow: hidden;
+
+        @include tablet-above {
+            margin: 0 0 10px 0;
+        }
+    }
+
+    &__text-container {
+        background-color: $textContainerBG;
+        border-bottom-left-radius: $textBottomLeftRadius;
+        padding: 5px 0 5px 25px;
+        overflow: hidden;
+    }
+
+    &__text {
+        margin: 0;
+        padding-left: $textPaddingLeft;
+        color: $textContainerCOLOR;
+    }
+
+    &__activities-container {
+        height: 300px;
+    }
+}
+
+.manage-jobs {
+    @include tablet-above {
+        grid-area: manage-jobs;
+    }
+
+    &__container {
+        margin: 0 10px 10px;
+        border-radius: 5px;
+        background-color: #EFF3F6;
+        overflow: hidden;
+
+        @include tablet-above {
+            margin: 0 0 10px 0;
+        }
+    }
+
+    &__text-container {
+        background-color: $textContainerBG;
+        border-bottom-left-radius: $textBottomLeftRadius;
+        padding: 5px 0 5px 25px;
+        overflow: hidden;
+    }
+
+    &__text {
+        margin: 0;
+        padding-left: $textPaddingLeft;
+        color: $textContainerCOLOR;
+    }
+
+}

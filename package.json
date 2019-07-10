@@ -1,0 +1,11 @@
+{
+  "name": "lofi-framework",
+  "version": "1.0.0",
+  "description": "My first WP Plugin that utilizes React with WordPress API to create a Job Board",
+  "main": "lofi-framework.php",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Abe Suni M. Caymo",
+  "license": "ISC"
+}
