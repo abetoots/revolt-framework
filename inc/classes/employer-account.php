@@ -1,10 +1,11 @@
 <?php
-    
-
-if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
 
-class Employer_Account{
+if (!defined('ABSPATH')) exit; // Exit if accessed directly
+
+
+class Employer_Account
+{
 
     /**
      * Instance
@@ -14,7 +15,7 @@ class Employer_Account{
      * @static
      *
      * @var Plugin The single instance of the class.
-    */
+     */
     private static $_instance = null;
 
     /**
@@ -26,9 +27,10 @@ class Employer_Account{
      * @access public
      *
      * @return Plugin An instance of the class.
-    */
-    public static function instance() {
-        if ( ! self::$_instance )
+     */
+    public static function instance()
+    {
+        if (!self::$_instance)
             self::$_instance = new self();
         return self::$_instance;
     }
@@ -41,18 +43,19 @@ class Employer_Account{
      *
      * @return string  The shortcode output
      */
-    public function render_employer_dashboard( $attributes, $content = null ) {
+    public function render_employer_dashboard($attributes, $content = null)
+    {
 
         // Parse shortcode attributes
         $default_attributes = array();
-        $attributes = shortcode_atts( $default_attributes, $attributes );    
+        $attributes = shortcode_atts($default_attributes, $attributes);
 
-        if ( ! is_user_logged_in() ) {
-            return __( 'Hmmm. Who are you? You\'re not signed in.', 'lofi-framework' );
+        if (!is_user_logged_in()) {
+            return __('Hmmm. Who are you? You\'re not signed in.', 'lofi-framework');
         }
-        
+
         // Render the dashboard
-        return $this->get_template_html( 'employer_dashboard', $attributes );
+        return $this->get_template_html('employer_dashboard', $attributes);
     }
 
     /**
@@ -63,18 +66,19 @@ class Employer_Account{
      *
      * @return string  The shortcode output
      */
-    public function render_employer_edit_profile( $attributes, $content = null ) {
+    public function render_employer_edit_profile($attributes, $content = null)
+    {
 
         // Parse shortcode attributes
         $default_attributes = array();
-        $attributes = shortcode_atts( $default_attributes, $attributes );    
+        $attributes = shortcode_atts($default_attributes, $attributes);
 
-        if ( ! is_user_logged_in() ) {
-            return __( 'Hmmm. Who are you? You\'re not signed in.', 'lofi-framework' );
+        if (!is_user_logged_in()) {
+            return __('Hmmm. Who are you? You\'re not signed in.', 'lofi-framework');
         }
-        
+
         // Render the login form using an external template
-        return $this->get_template_html( 'employer_edit_profile', $attributes );
+        return $this->get_template_html('employer_edit_profile', $attributes);
     }
 
     /**
@@ -85,11 +89,12 @@ class Employer_Account{
      *
      * @return string  The shortcode output
      */
-    public function render_employer_view_profile( $attributes, $content = null ) {
+    public function render_employer_view_profile($attributes, $content = null)
+    {
 
         // Parse shortcode attributes
         $default_attributes = array(
-            'cover_photo'   => true, 
+            'cover_photo'   => true,
             'logo'   => true,
             'about'         => true,
             'member_since'  => true,
@@ -100,14 +105,14 @@ class Employer_Account{
             'contact_num'       => true,
             'contact_form'      => true,
         );
-        $attributes = shortcode_atts( $default_attributes, $attributes );    
+        $attributes = shortcode_atts($default_attributes, $attributes);
 
-        if ( ! is_user_logged_in() ) {
-            return __( 'Hmmm. Who are you? You\'re not signed in.', 'lofi-framework' );
+        if (!is_user_logged_in()) {
+            return __('Hmmm. Who are you? You\'re not signed in.', 'lofi-framework');
         }
-        
+
         // Render the login form using an external template
-        return $this->get_template_html( 'employer_view_profile', $attributes );
+        return $this->get_template_html('employer_view_profile', $attributes);
     }
 
     /**
@@ -118,17 +123,18 @@ class Employer_Account{
      *
      * @return string  The shortcode output
      */
-    public function render_employer_manage_jobs( $attributes, $content = null ) {
-        
-        $default_attributes = array();
-        $attributes = shortcode_atts( $default_attributes, $attributes );    
+    public function render_employer_manage_jobs($attributes, $content = null)
+    {
 
-        if ( ! is_user_logged_in() ) {
-            return __( 'Hmmm. Who are you? You\'re not signed in.', 'lofi-framework' );
+        $default_attributes = array();
+        $attributes = shortcode_atts($default_attributes, $attributes);
+
+        if (!is_user_logged_in()) {
+            return __('Hmmm. Who are you? You\'re not signed in.', 'lofi-framework');
         }
-        
+
         // Render the login form using an external template
-        return $this->get_template_html( 'manage_jobs', $attributes );
+        return $this->get_template_html('manage_jobs', $attributes);
     }
 
 
@@ -141,17 +147,18 @@ class Employer_Account{
      *
      * @uses $this->do_register_employer();
      */
-    public function handle_form_response(){
-        
+    public function handle_form_response()
+    {
 
-        if ( ! isset( $_POST['lofi-edit-profile-nonce'] ) && ! isset( $_POST['form_employer_submit'] ) ){
+
+        if (!isset($_POST['lofi-edit-profile-nonce']) && !isset($_POST['form_employer_submit'])) {
             return;
         }
 
-        if( ! wp_verify_nonce( $_POST['lofi-edit-profile-nonce']  , 'lofi_employer_edit_profile_action'  ) ) {
+        if (!wp_verify_nonce($_POST['lofi-edit-profile-nonce'], 'lofi_employer_edit_profile_action')) {
             return;
         }
-        wp_redirect( home_url() );
+        wp_redirect(home_url());
         exit;
     }
 
@@ -163,11 +170,12 @@ class Employer_Account{
      *
      * @return string               The contents of the template.
      */
-    private function get_template_html( $template_name, $attributes = null ) {
-        if ( ! $attributes ) {
+    private function get_template_html($template_name, $attributes = null)
+    {
+        if (!$attributes) {
             $attributes = array();
         }
-    
+
         /**
          * Notes:
          * The output buffer collects everything that is printed between 
@@ -176,16 +184,16 @@ class Employer_Account{
          * Notes: the do actions are called by add action, gives chance to other devs to add further customizations
          */
         ob_start();
-    
-        do_action( 'lofi_customize_before_' . $template_name );
-    
-        require( LOFI_FRAMEWORK_DIR . 'inc/frontend/html-templates/' . $template_name . '.php');
-    
-        do_action( 'lofi_customize_after_' . $template_name );
-    
+
+        do_action('lofi_customize_before_' . $template_name);
+
+        require(LOFI_FRAMEWORK_DIR . 'inc/frontend/html-templates/' . $template_name . '.php');
+
+        do_action('lofi_customize_after_' . $template_name);
+
         $html = ob_get_contents();
         ob_end_clean();
-    
+
         return $html;
     }
 
@@ -197,8 +205,9 @@ class Employer_Account{
      *
      * @since 1.0.0
      * @access public
-    */
-    public function __construct(){
+     */
+    public function __construct()
+    {
         $this->init();
     }
 
@@ -207,20 +216,21 @@ class Employer_Account{
      * 
      * @since 1.0.0
      * @access public
-    */
-    public function init(){
+     */
+    public function init()
+    {
 
         //Registration
-        add_shortcode( 'lofi-employer-dashboard', array( $this, 'render_employer_dashboard' ) );
+        add_shortcode('lofi-employer-dashboard', array($this, 'render_employer_dashboard'));
 
-        add_shortcode( 'lofi-employer-edit-profile', array( $this, 'render_employer_edit_profile' ) );
+        add_shortcode('lofi-employer-edit-profile', array($this, 'render_employer_edit_profile'));
 
-        add_shortcode( 'lofi-employer-view-profile', array( $this, 'render_employer_view_profile' ) );
+        add_shortcode('lofi-employer-view-profile', array($this, 'render_employer_view_profile'));
 
-        add_shortcode( 'lofi-employer-manage-jobs', array( $this, 'render_employer_manage_jobs' ) );
-     
+        add_shortcode('lofi-employer-manage-jobs', array($this, 'render_employer_manage_jobs'));
+
         // Handle form response
-        add_action( 'admin_post_lofi_employer_edit_profile_action', array($this, 'handle_form_response' ));
+        add_action('admin_post_lofi_employer_edit_profile_action', array($this, 'handle_form_response'));
     }
 }
 Employer_Account::instance();

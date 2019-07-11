@@ -6,7 +6,7 @@ if (!defined('ABSPATH')) {
     exit;
 }
 // Exit if accessed directly
-class ColumnsTaxonomies
+class Columns_Taxonomies
 {
     /**
      * Instance
@@ -29,7 +29,7 @@ class ColumnsTaxonomies
      *
      * @return Plugin An instance of the class.
      */
-    public static function instance()
+    public static function get_instance()
     {
         if (!self::$_instance)
             self::$_instance = new self();
@@ -178,3 +178,4 @@ class ColumnsTaxonomies
         add_filter('manage_premium_packages_custom_column', array($this, 'populate_custom_columns_premium_package', 10, 3), 10, 2);
     }
 }
+Columns_Taxonomies::get_instance();

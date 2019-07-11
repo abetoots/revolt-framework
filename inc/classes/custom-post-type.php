@@ -3,8 +3,8 @@
 namespace LofiFramework\Core;
 
 if (!defined('ABSPATH')) exit; // Exit if accessed directly
-require_once(LOFI_FRAMEWORK_DIR . 'inc/admin/helpers/meta-job-post.php');
-require_once(LOFI_FRAMEWORK_DIR . 'inc/admin/helpers/columns/col-cpt.php');
+require_once(LOFI_FRAMEWORK_DIR . 'inc/classes/helpers/columns/meta-jobpost.php');
+require_once(LOFI_FRAMEWORK_DIR . 'inc/classes/helpers/columns/columns-cpt.php');
 class CustomPostType
 {
 
@@ -15,7 +15,6 @@ class CustomPostType
      * @access private
      * @static
      *
-     * @var Plugin The single instance of the class.
      */
     private static $_instance = null;
 

@@ -6,7 +6,7 @@ if (!defined('ABSPATH')) {
     exit;
 }
 // Exit if accessed directly
-class ColumnsCPT
+class Columns_CPT
 {
     /**
      * Instance
@@ -123,4 +123,4 @@ class ColumnsCPT
         add_filter('manage_lofi-job-post_posts_custom_column', array($this, 'populate_custom_columns_cpt'), 10, 2);
     }
 }
-ColumnsCCPT::get_instance();
+Columns_CPT::get_instance();

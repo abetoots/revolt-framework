@@ -1,12 +1,15 @@
 <?php
 
+namespace LofiFramework\Helpers\Utilities;
+
 if (!defined('ABSPATH')) {
     exit;
 }
 
 
 //Dynamically add class when current page is 'lofi_options'
-function lofi_add_css_is_admin($classes)
+add_filter('admin_body_class', __NAMESPACE__ . '\add_css_is_admin');
+function add_css_is_admin($classes)
 {
     $screen = get_current_screen();
     if (is_admin() && get_admin_page_parent() == 'lofi_options') {
@@ -20,9 +23,9 @@ function lofi_add_css_is_admin($classes)
     }
     return $classes;
 }
-add_filter('admin_body_class', 'lofi_add_css_is_admin');
 
-function lofi_enqueue_styles_if_admin($hook)
+add_action('admin_enqueue_scripts', __NAMESPACE__ . '\enqueue_styles_if_admin');
+function enqueue_styles_if_admin($hook)
 {
     // wp_die($hook);
     //Add a google font
@@ -61,7 +64,7 @@ function lofi_enqueue_styles_if_admin($hook)
     // Include our custom jQuery file with WordPress Color Picker dependency
     wp_enqueue_script('color-picker', LOFI_FRAMEWORK_URL . 'inc/admin/js/color-picker.js', array('wp-color-picker'), false, true);
 }
-add_action('admin_enqueue_scripts', 'lofi_enqueue_styles_if_admin');
+
 
 
 
@@ -73,7 +76,8 @@ add_action('admin_enqueue_scripts', 'lofi_enqueue_styles_if_admin');
  * @uses wp_get_current_user()          Returns a WP_User object for the current user
  * @uses wp_redirect()                  Redirects the user to the specified URL
  */
-function lofi_update_new_user_meta($user_id)
+add_action('user_register', __NAMESPACE__ . '\update_new_user_meta');
+function update_new_user_meta($user_id)
 {
     $user_info = get_userdata($user_id);
     $roles = $user_info->roles;
@@ -83,7 +87,7 @@ function lofi_update_new_user_meta($user_id)
     // }
     return $user_id;
 }
-add_action('user_register', 'lofi_update_new_user_meta');
+
 
 
 /**
@@ -92,7 +96,7 @@ add_action('user_register', 'lofi_update_new_user_meta');
  * @uses wp_get_current_user()          Returns a WP_User object for the current user
  * @uses wp_redirect()                  Redirects the user to the specified URL
  */
-function lofi_redirect_users_by_role()
+function redirect_users_by_role()
 {
 
     $current_user   = wp_get_current_user();
@@ -106,13 +110,13 @@ function lofi_redirect_users_by_role()
         case 'jobseeker':
             wp_redirect(home_url('job-seeker'));
     }
-} // lofi_redirect_users_by_role
-add_action('admin_init', 'lofi_redirect_users_by_role');
+}
+add_action('admin_init', __NAMESPACE__ . '\redirect_users_by_role');
 
 
 
 
-function lofi_redirect_to_post_on_publish_or_save_job_post($location)
+function redirect_on_jobpost_publish_or_save($location)
 {
     $post_type = get_post_type();
     $current_user   = wp_get_current_user();
@@ -130,10 +134,11 @@ function lofi_redirect_to_post_on_publish_or_save_job_post($location)
     }
     return $location;
 }
-add_filter('redirect_post_location', 'lofi_redirect_to_post_on_publish_or_save_job_post');
+add_filter('redirect_post_location', __NAMESPACE__ . '\redirect_on_jobpost_publish_or_save');
 
 //Add some post states
-function lofi_add_post_state($post_states, $post)
+add_filter('display_post_states', __NAMESPACE__ . '\add_post_state', 10, 2);
+function add_post_state($post_states, $post)
 {
     $addedBy = get_post_meta($post->ID, 'inserted', true);
     $title = $post->post_title;
@@ -145,9 +150,9 @@ function lofi_add_post_state($post_states, $post)
 
     return $post_states;
 }
-add_filter('display_post_states', 'lofi_add_post_state', 10, 2);
 
-add_action('rest_api_init', 'add_taxonomy_terms');
+
+add_action('rest_api_init', __NAMESPACE__ . '\add_taxonomy_terms');
 function add_taxonomy_terms()
 {
     $taxonomies = get_object_taxonomies('lofi-job-post');

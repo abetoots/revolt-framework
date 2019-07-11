@@ -107,12 +107,12 @@ class Plugin
     private function include_other_files()
     {
         $lofi_includes = array(
-            'inc/admin/register-settings.php', //Register settings
-            'inc/admin/utilities.php', //CSS enqueues and other minor functions
+            // 'inc/admin/register-settings.php', //Register settings
+            // 'inc/admin/utilities.php', //CSS enqueues and other minor functions
             // 'inc/admin/job-post-meta.php', //Job board custom post type meta box
-            'inc/admin/posts-meta.php', // Posts custom header meta box
+            // 'inc/admin/posts-meta.php', // Posts custom header meta box
             'inc/admin/taxonomy-term-meta.php', //Initial terms' meta
-            'inc/admin/theme-support.php', //User enabled theme options
+            // 'inc/admin/theme-support.php', //User enabled theme options
 
         );
 
@@ -142,6 +142,8 @@ class Plugin
         require_once(LOFI_FRAMEWORK_DIR . 'inc/classes/jobseeker-registration.php');
         require_once(LOFI_FRAMEWORK_DIR . 'inc/classes/login.php');
         require_once(LOFI_FRAMEWORK_DIR . 'inc/classes/employer-account.php');
+        require_once(LOFI_FRAMEWORK_DIR . 'inc/classes/settings-jobboard.php');
+        require_once(LOFI_FRAMEWORK_DIR . 'inc/classes/settings-profile.php');
     }
 
     /**

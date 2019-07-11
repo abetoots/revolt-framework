@@ -7,7 +7,7 @@ if (!defined('ABSPATH')) {
 }
 // Exit if accessed directly
 
-class MetaJobPost
+class Meta_JobPost
 {
 
     /**
@@ -398,4 +398,4 @@ public function init()
     // add_action('save_post_lofi-job-post', array($this, 'save_persistent_data_employer_photo'));
 }
 }
-MetaJobPost::get_instance();
+Meta_JobPost::get_instance();
