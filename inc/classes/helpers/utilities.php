@@ -2,6 +2,8 @@
 
 namespace LofiFramework\Helpers\Utilities;
 
+use LofiFramework;
+
 if (!defined('ABSPATH')) {
     exit;
 }
@@ -82,20 +84,22 @@ function update_new_user_meta($user_id)
     $user_info = get_userdata($user_id);
     $roles = $user_info->roles;
 
-    // if (in_array('employer', $roles) || in_array('jobseeker', $roles)) {
-    //     update_user_meta($user_id, 'show_admin_bar_front', 'false');
-    // }
+    if (in_array('employer', $roles) || in_array('jobseeker', $roles)) {
+        // update_user_meta($user_id, 'show_admin_bar_front', 'false');
+    }
     return $user_id;
 }
 
 
 
 /**
+ * TODO Remember to enable
  * Redirects users based on their role
  *
  * @uses wp_get_current_user()          Returns a WP_User object for the current user
  * @uses wp_redirect()                  Redirects the user to the specified URL
  */
+add_action('admin_init', __NAMESPACE__ . '\redirect_users_by_role');
 function redirect_users_by_role()
 {
 
@@ -111,11 +115,16 @@ function redirect_users_by_role()
             wp_redirect(home_url('job-seeker'));
     }
 }
-add_action('admin_init', __NAMESPACE__ . '\redirect_users_by_role');
 
 
 
 
+/**
+ * We redirect after a job has been posted instead of the default behavior of
+ * staying in the edit screen.  Since 'employers' do not have capabilities to edit a
+ * published post, it doesn't make sense to be on the edit screen and it will cause errors.
+ */
+add_filter('redirect_post_location', __NAMESPACE__ . '\redirect_on_jobpost_publish_or_save');
 function redirect_on_jobpost_publish_or_save($location)
 {
     $post_type = get_post_type();
@@ -134,14 +143,15 @@ function redirect_on_jobpost_publish_or_save($location)
     }
     return $location;
 }
-add_filter('redirect_post_location', __NAMESPACE__ . '\redirect_on_jobpost_publish_or_save');
 
-//Add some post states
+
+/**
+ * Adds post state to posts with meta 'inserted: lofi'
+ */
 add_filter('display_post_states', __NAMESPACE__ . '\add_post_state', 10, 2);
 function add_post_state($post_states, $post)
 {
     $addedBy = get_post_meta($post->ID, 'inserted', true);
-    $title = $post->post_title;
 
     //Only add post states to pages added by our plugin
     if ($addedBy == 'lofi') {
@@ -149,38 +159,4 @@ function add_post_state($post_states, $post)
     }
 
     return $post_states;
-}
-
-
-add_action('rest_api_init', __NAMESPACE__ . '\add_taxonomy_terms');
-function add_taxonomy_terms()
-{
-    $taxonomies = get_object_taxonomies('lofi-job-post');
-    foreach ($taxonomies as $taxonomy) {
-        //dynamically calls register_rest_field for each taxonomy
-        register_term_rest_fields_dynamic('lofi-job-post', $taxonomy);
-    }
-}
-//Instead of writing each register rest field, use this instead
-function register_term_rest_fields_dynamic($post_type, $taxonomy)
-{
-    return register_rest_field($post_type, $taxonomy . "_terms", array(
-        'get_callback'  => function ($obj_arr, $attribute) {
-            /**
-             * This anonymous callback function receives 2 params, the post object
-             * and the name/attribute of the registered field which is $taxonomy."_terms"
-             * 
-             * We strip the "_terms" so we can dynamically use it in get_the_terms()
-             */
-            $taxonomy_type =  str_replace('_terms', '', $attribute);
-            //Returns an array of objects
-            $terms = get_the_terms($obj_arr['id'], $taxonomy_type);
-            $term_names = array();
-            //extract the term name
-            foreach ($terms as $term) {
-                $term_names[] = $term->name;
-            }
-            return $term_names;
-        }
-    ));
 }

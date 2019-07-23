@@ -22,7 +22,8 @@ if (!defined('ABSPATH')) exit; // Exit if accessed directly
 define('LOFI_FRAMEWORK_DIR', plugin_dir_path(__FILE__));
 define('LOFI_FRAMEWORK_URL', plugin_dir_url(__FILE__));
 
-
+define('MY_ACF_PATH', LOFI_FRAMEWORK_DIR . '/inc/libraries/acf/');
+define('MY_ACF_URL', LOFI_FRAMEWORK_URL . '/inc/libraries/acf/');
 
 /**
  * Main Lofi Framework Class
@@ -63,6 +64,13 @@ final class LofiFramework
      */
     const MINIMUM_PHP_VERSION = '7.0';
 
+    /**
+     * Minimum ACF Version
+     *
+     * @since 1.0.0
+     * @var string Minimum PHP version required to run the plugin.
+     */
+    const MINIMUM_ACF_VERSION = '5.2.7';
 
 
     /**
@@ -204,9 +212,9 @@ final class LofiFramework
 
         $message = sprintf(
             /* translators: 1: Plugin name 2: PHP 3: Required PHP version */
-            esc_html__('"%1$s" requires "%2$s" version %3$s or greater.', 'elementor-awesomesauce'),
-            '<strong>' . esc_html__('Elementor Awesomesauce', 'elementor-awesomesauce') . '</strong>',
-            '<strong>' . esc_html__('PHP', 'elementor-awesomesauce') . '</strong>',
+            esc_html__('"%1$s" requires "%2$s" version %3$s or greater.', 'lofi-framework'),
+            '<strong>' . esc_html__('Lofi Framework', 'lofi-framework') . '</strong>',
+            '<strong>' . esc_html__('PHP', 'lofi-framework') . '</strong>',
             self::MINIMUM_PHP_VERSION
         );
 

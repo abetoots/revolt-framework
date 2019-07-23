@@ -3,7 +3,7 @@
 namespace LofiFramework\Core;
 
 if (!defined('ABSPATH')) exit; // Exit if accessed directly
-require_once(LOFI_FRAMEWORK_DIR . 'inc/classes/helpers/columns/meta-jobpost.php');
+require_once(LOFI_FRAMEWORK_DIR . 'inc/classes/helpers/meta-jobpost.php');
 require_once(LOFI_FRAMEWORK_DIR . 'inc/classes/helpers/columns/columns-cpt.php');
 class CustomPostType
 {
@@ -63,9 +63,9 @@ class CustomPostType
             'show_in_nav_menus'     => false,
             'show_in_menu'          => true,
             'menu_position'         => 5,
-            'supports'              => array('title', 'editor', 'author', 'thumbnail'),
+            'supports'              => array('title', 'editor', 'author', 'thumbnail', 'custom-fields'),
             'menu_icon'             => $image,
-            'register_meta_box_cb'  => array('\LofiFramework\Helpers\MetaJobPost', 'register_metabox_cb'), // refer to inc/lofi-metaboxes.php
+            'register_meta_box_cb'  => array('\LofiFramework\Helpers\Meta_JobPost', 'register_metabox_cb'), // refer to inc/lofi-metaboxes.php
             'has_archive'           => true,
             'sort'                  => false,
             'rewrite'               => array(
@@ -195,6 +195,19 @@ class CustomPostType
             $role->add_cap($cap); //defaults
         }
     }
+
+    // A static variable that holds our meta name and type as key: value pairs
+
+    public static $meta_keys = array(
+        'lofi_company_name',
+        'lofi_headline',
+        'lofi_established_in',
+        'lofi_team_size',
+        'lofi_website',
+        'lofi_description',
+        'lofi_phone',
+        'lofi_email'
+    );
 
     /**
      *  Plugin class constructor

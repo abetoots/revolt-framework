@@ -2,6 +2,8 @@
 
 namespace LofiFramework\Helpers\Columns;
 
+use LofiFramework\Helpers\Meta_Premium_Terms;
+
 if (!defined('ABSPATH')) {
     exit;
 }
@@ -68,10 +70,11 @@ class Columns_Taxonomies
      */
     public function populate_custom_columns_premium_package($out,  $column, $term_id)
     {
+
         //POPULATE BG COLOR COLUMN
         if ($column === 'bg-color') {
 
-            $color = lofi_get_term_meta_color_bg($term_id, true);
+            $color = Meta_Premium_Terms::get_sanitized_bg_meta($term_id);
 
             if (!$color) {
                 $color = '#ffffff';
@@ -81,7 +84,8 @@ class Columns_Taxonomies
             //POPULATE TEXT COLOR COLUMN
         } elseif ($column === 'text-color') {
 
-            $color = lofi_get_term_meta_color_text($term_id, true);
+            $color = Meta_Premium_Terms::get_sanitized_text_meta($term_id);
+
 
             if (!$color) {
                 $color = '#ffffff';
@@ -91,8 +95,8 @@ class Columns_Taxonomies
             //POPULATE OUTPUT COLUMN
         } elseif ($column === 'output') {
 
-            $bgColor = lofi_get_term_meta_color_bg($term_id, true);
-            $textColor = lofi_get_term_meta_color_text($term_id, true);
+            $bgColor = Meta_Premium_Terms::get_sanitized_bg_meta($term_id);
+            $textColor = Meta_Premium_Terms::get_sanitized_text_meta($term_id);
             $term = get_term($term_id, 'premium_packages');
             $name = $term->name;
 
@@ -175,7 +179,7 @@ class Columns_Taxonomies
     {
         //Premium Pacakage Columns
         add_filter('manage_edit-premium_packages_columns', array($this, 'register_columns_premium_package'));
-        add_filter('manage_premium_packages_custom_column', array($this, 'populate_custom_columns_premium_package', 10, 3), 10, 2);
+        add_filter('manage_premium_packages_custom_column', array($this, 'populate_custom_columns_premium_package'), 10, 3);
     }
 }
 Columns_Taxonomies::get_instance();

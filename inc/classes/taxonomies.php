@@ -4,7 +4,8 @@ namespace LofiFramework\Core;
 
 
 if (!defined('ABSPATH')) exit; // Exit if accessed directly
-
+require_once(LOFI_FRAMEWORK_DIR . 'inc/classes/helpers/meta-premium-terms.php');
+require_once(LOFI_FRAMEWORK_DIR . 'inc/classes/helpers/columns/columns-taxonomies.php');
 
 class Taxonomies
 {

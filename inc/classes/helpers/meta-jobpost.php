@@ -52,7 +52,7 @@ class Meta_JobPost
         add_meta_box(
             'lofi-job-post-salary',
             '&dollar; Salary',
-            array(MetaJobPost::get_instance(), 'render_salary_metabox'),
+            array(self::get_instance(), 'render_salary_metabox'),
             $post->post_type,
             'advanced',
             'high'
@@ -61,7 +61,7 @@ class Meta_JobPost
         add_meta_box(
             'lofi-job-post-company',
             'Company',
-            array(MetaJobPost::get_instance(), 'render_employer_info_metabox'),
+            array(self::get_instance(), 'render_employer_info_metabox'),
             $post->post_type,
             'advanced',
             'high'
@@ -73,7 +73,7 @@ class Meta_JobPost
      * @uses update_post_meta
      * @param post Object
      */
-    public static function render_salary_metabox($post)
+    public function render_salary_metabox($post)
     {
         //Get values, not the array by specifying 'true' in get post meta
         $isNegotiable = get_post_meta($post->ID, 'lofi-job-post-is-negotiable-field', true);

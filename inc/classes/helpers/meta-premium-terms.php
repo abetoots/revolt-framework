@@ -42,14 +42,14 @@ class Meta_Premium_Terms
      * @access private
      * @return string Sanitized hex background color
      */
-    private function get_sanitized_bg_meta($term_id)
+    public static function get_sanitized_bg_meta($term_id)
     {
         $value = get_term_meta($term_id, 'premium_color_picker_bg', true);
         $value = sanitize_hex_color($value);
         return $value;
     }
 
-    private function get_sanitized_text_meta($term_id)
+    public static function get_sanitized_text_meta($term_id)
     {
         $value = get_term_meta($term_id, 'premium_color_picker_text', true);
         $value = sanitize_hex_color($value);
@@ -66,11 +66,15 @@ class Meta_Premium_Terms
     {
 
         register_term_meta('premium_packages', 'premium_color_picker_bg', array(
-            'sanitize_callback'     => 'sanitize_hex_color'
+            'sanitize_callback'     => 'sanitize_hex_color',
+            'auth_callback'         => current_user_can('manage_lofi_terms'),
+            'show_in_rest'          => true
         ));
 
         register_term_meta('premium_packages', 'premium_color_picker_text', array(
-            'sanitize_callback'     => 'sanitize_hex_color'
+            'sanitize_callback'     => 'sanitize_hex_color',
+            'auth_callback'         => current_user_can('manage_lofi_terms'),
+            'show_in_rest'          => true
         ));
     }
     /**
@@ -114,10 +118,10 @@ public function text_color_add_new_field()
  * @since 1.0.0
  * @access public
  */
-function bg_color_edit_field($term)
+public function bg_color_edit_field($term)
 {
     $default = '#ffffff';
-    $color   = $this->get_sanitized_bg_meta($term->term_id, true);
+    $color   = self::get_sanitized_bg_meta($term->term_id, true);
 
     if (!$color)
         $color = $default; ?>
@@ -138,7 +142,7 @@ public function text_color_edit_field($term)
 {
 
     $default = '#ffffff';
-    $color   = $this->get_sanitized_text_meta($term->term_id, true);
+    $color   = self::get_sanitized_text_meta($term->term_id, true);
 
     if (!$color)
         $color = $default; ?>
@@ -168,7 +172,7 @@ public function save_bg_color_term_meta($term_id)
     if (!isset($_POST['lofi_term_color_bg_nonce']) || !wp_verify_nonce($_POST['lofi_term_color_bg_nonce'], basename(__FILE__)))
         return;
 
-    $old_color = $this->get_sanitized_bg_meta($term_id);
+    $old_color = self::get_sanitized_bg_meta($term_id);
     $new_color = isset($_POST['lofi-term-color-bg']) ? sanitize_hex_color($_POST['lofi-term-color-bg']) : '';
 
     if ($old_color && '' === $new_color)
@@ -184,7 +188,7 @@ public function save_text_color_term_meta($term_id)
     if (!isset($_POST['lofi_term_color_text_nonce']) || !wp_verify_nonce($_POST['lofi_term_color_text_nonce'], basename(__FILE__)))
         return;
 
-    $old_color = $this->get_sanitized_text_meta($term_id);
+    $old_color = self::get_sanitized_text_meta($term_id);
     $new_color = isset($_POST['lofi-term-color-text']) ? sanitize_hex_color($_POST['lofi-term-color-text']) : '';
 
     if ($old_color && '' === $new_color)

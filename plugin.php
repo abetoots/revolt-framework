@@ -2,6 +2,7 @@
 
 namespace LofiFramework;
 
+use LofiFramework\Core\CustomPostType;
 
 /**
  * Class Plugin
@@ -96,35 +97,6 @@ class Plugin
     }
 
     /**
-     * Load other files
-     *
-     * Load plugin localization files.
-     * Fired by `init` action hook.
-     *
-     * @since 1.0.0
-     * @access public
-     */
-    private function include_other_files()
-    {
-        $lofi_includes = array(
-            // 'inc/admin/register-settings.php', //Register settings
-            // 'inc/admin/utilities.php', //CSS enqueues and other minor functions
-            // 'inc/admin/job-post-meta.php', //Job board custom post type meta box
-            // 'inc/admin/posts-meta.php', // Posts custom header meta box
-            'inc/admin/taxonomy-term-meta.php', //Initial terms' meta
-            // 'inc/admin/theme-support.php', //User enabled theme options
-
-        );
-
-        foreach ($lofi_includes as $file) {
-            if (!file_exists(LOFI_FRAMEWORK_DIR  . $file)) {
-                trigger_error(sprintf(__('Error locating %s for inclusion', 'lofi-framework'), $file), E_USER_ERROR);
-            }
-            require_once LOFI_FRAMEWORK_DIR . $file;
-        }
-    }
-
-    /**
      * Include Class Files
      *
      * Load widgets files
@@ -144,7 +116,25 @@ class Plugin
         require_once(LOFI_FRAMEWORK_DIR . 'inc/classes/employer-account.php');
         require_once(LOFI_FRAMEWORK_DIR . 'inc/classes/settings-jobboard.php');
         require_once(LOFI_FRAMEWORK_DIR . 'inc/classes/settings-profile.php');
+        require_once(LOFI_FRAMEWORK_DIR . 'inc/classes/helpers/utilities.php');
+        require_once(LOFI_FRAMEWORK_DIR . 'inc/classes/helpers/utilities/api.php');
     }
+
+    /**
+     * Include Class Files
+     *
+     * Load widgets files
+     *
+     * @since 1.0.0
+     * @access private
+     */
+    private function include_libraries()
+    {
+        if (!class_exists('ACF') || !function_exists('get_field')) {
+            include_once(MY_ACF_PATH . 'acf.php');
+        }
+    }
+
 
     /**
      *  Plugin class constructor
@@ -156,10 +146,8 @@ class Plugin
      */
     public function __construct()
     {
-
-        $this->include_other_files();
         $this->include_class_files();
-
+        $this->include_libraries();
         // Register widget scripts
         add_action('elementor/frontend/after_register_scripts', [$this, 'widget_scripts']);
 
