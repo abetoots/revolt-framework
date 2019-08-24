@@ -368,5 +368,3 @@ function acf_get_location_screen( $screen = array(), $field_group = false ) {
 function acf_get_valid_location_rule( $rule ) {
 	return acf_validate_location_rule( $rule );
 }
-
-?>

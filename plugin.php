@@ -1,8 +1,6 @@
 <?php
 
-namespace LofiFramework;
-
-use LofiFramework\Core\CustomPostType;
+namespace Revolt_Framework;
 
 /**
  * Class Plugin
@@ -43,63 +41,8 @@ class Plugin
         return self::$_instance;
     }
 
-
-    /**
-     * widget_scripts
-     *
-     * Load required plugin core files.
-     *
-     * @since 1.0.0
-     * @access public
-     */
-    public function widget_scripts()
-    {
-        wp_register_script('lofi-elementor-js', LOFI_FRAMEWORK_URL . 'inc/admin/js/lofi-elementor.js', array('jquery'), false, true);
-    }
-
-
-    /**
-     * Include Widgets files
-     *
-     * Load widgets files
-     *
-     * @since 1.0.0
-     * @access private
-     */
-    private function include_widgets_files()
-    {
-        require_once(LOFI_FRAMEWORK_DIR . 'elementor-widgets/registration-form.php');
-
-        require_once(LOFI_FRAMEWORK_DIR . 'elementor-widgets/employer-account.php');
-
-        //require_once( __DIR__ . '/widgets/login-form.php' );
-
-        //require_once( __DIR__ . '/widgets/search-form.php' );
-    }
-
-    /**
-     * Register Widgets
-     *
-     * Register new Elementor widgets.
-     *
-     * @since 1.0.0
-     * @access public
-     */
-    public function register_widgets()
-    {
-        // It's is now safe to include Widgets files
-        $this->include_widgets_files();
-
-        // Register Widgets
-        \Elementor\Plugin::instance()->widgets_manager->register_widget_type(new Elementor_Widgets\Registration_Form());
-
-        \Elementor\Plugin::instance()->widgets_manager->register_widget_type(new Elementor_Widgets\Employer_Account());
-    }
-
     /**
      * Include Class Files
-     *
-     * Load widgets files
      *
      * @since 1.0.0
      * @access private
@@ -107,23 +50,22 @@ class Plugin
     private function include_class_files()
     {
         // Include our classes
-        require_once(LOFI_FRAMEWORK_DIR . 'inc/classes/custom-post-type.php');
-        require_once(LOFI_FRAMEWORK_DIR . 'inc/classes/taxonomies.php');
-        require_once(LOFI_FRAMEWORK_DIR . 'inc/classes/insert-pages.php');
-        require_once(LOFI_FRAMEWORK_DIR . 'inc/classes/employer-registration.php');
-        require_once(LOFI_FRAMEWORK_DIR . 'inc/classes/jobseeker-registration.php');
-        require_once(LOFI_FRAMEWORK_DIR . 'inc/classes/login.php');
-        require_once(LOFI_FRAMEWORK_DIR . 'inc/classes/employer-account.php');
-        require_once(LOFI_FRAMEWORK_DIR . 'inc/classes/settings-jobboard.php');
-        require_once(LOFI_FRAMEWORK_DIR . 'inc/classes/settings-profile.php');
-        require_once(LOFI_FRAMEWORK_DIR . 'inc/classes/helpers/utilities.php');
-        require_once(LOFI_FRAMEWORK_DIR . 'inc/classes/helpers/utilities/api.php');
+        require_once(REVOLT_FRAMEWORK_DIR . 'inc/core/custom-post-type.php');
+        require_once(REVOLT_FRAMEWORK_DIR . 'inc/core/employer-registration.php');
+        require_once(REVOLT_FRAMEWORK_DIR . 'inc/core/jobseeker-registration.php');
+        require_once(REVOLT_FRAMEWORK_DIR . 'inc/core/login.php');
+        require_once(REVOLT_FRAMEWORK_DIR . 'inc/core/settings-jobboard.php');
+        require_once(REVOLT_FRAMEWORK_DIR . 'inc/core/taxonomies.php');
+        require_once(REVOLT_FRAMEWORK_DIR . 'inc/core/helpers/acf.php');
+        require_once(REVOLT_FRAMEWORK_DIR . 'inc/core/helpers/api.php');
+        require_once(REVOLT_FRAMEWORK_DIR . 'inc/core/helpers/columns.php');
+        require_once(REVOLT_FRAMEWORK_DIR . 'inc/core/helpers/registration.php');
+        require_once(REVOLT_FRAMEWORK_DIR . 'inc/core/helpers/rewrite.php');
+        require_once(REVOLT_FRAMEWORK_DIR . 'inc/core/helpers/utilities.php');
     }
 
     /**
-     * Include Class Files
-     *
-     * Load widgets files
+     * Include libraries
      *
      * @since 1.0.0
      * @access private
@@ -131,7 +73,7 @@ class Plugin
     private function include_libraries()
     {
         if (!class_exists('ACF') || !function_exists('get_field')) {
-            include_once(MY_ACF_PATH . 'acf.php');
+            include_once(REVOLT_ACF_PATH . 'acf.php');
         }
     }
 
@@ -148,13 +90,9 @@ class Plugin
     {
         $this->include_class_files();
         $this->include_libraries();
-        // Register widget scripts
-        add_action('elementor/frontend/after_register_scripts', [$this, 'widget_scripts']);
-
-        // Register widgets
-        add_action('elementor/widgets/widgets_registered', [$this, 'register_widgets']);
     }
 }
 
 // Instantiate Plugin Class
+
 Plugin::instance();

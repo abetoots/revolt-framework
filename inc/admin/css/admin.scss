@@ -1,0 +1,72 @@
+$switch-width: 35px;
+$switch-height: 20px;
+
+$slider: 10px;
+
+$slideTranslate: 15px;
+
+$outputFontSize: 1em;
+$iconFontSize: 1em;
+
+#menu-posts-revolt-job-post {
+    .wp-menu-name {
+        color: aquamarine;
+        font-weight: 700;
+    }
+}
+
+.switch {
+    $self: &;
+    position: relative;
+    display: inline-block;
+    width: $switch-width;
+    height: $switch-height;
+
+    &__input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+    }
+
+    &__slider {
+        border-radius: 34px;
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #ccc;
+        transition: 0.3s;
+
+        &:before {
+            border-radius: 50%;
+            position: absolute;
+            content: "";
+            height: $slider;
+            width: $slider;
+            left: 4px;
+            top: 5px;
+            background-color: white;
+            transition: 0.3s ease-in-out;
+        }
+    }
+
+    &__input {
+        &:checked+#{$self}__slider {
+
+            background-color: #2196f3;
+
+            &:before {
+                transform: translateX($slideTranslate);
+            }
+        }
+
+        &:focus+#{$self}__slider {
+            box-shadow: 0 0 1px #2196f3;
+        }
+    }
+
+
+
+}

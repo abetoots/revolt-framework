@@ -1,54 +1,54 @@
-<?php if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly ?>
+<?php if (!defined('ABSPATH')) exit; // Exit if accessed directly 
+?>
 
+<div class="Registration__container">
 
-<div id="register-form" class="widecolumn">
-    <?php if ( $attributes['show_title'] ) : ?>
-    <h3><?php _e($attributes['title'], 'lofi-framework');  ?></h3>
-    <?php endif; ?>
-
-
-    <?php if ( !$attributes['disabled'] ) : // no need for error display when viewing in elementor  ?>
-    <?php if ( count( $attributes['errors'] ) > 0 ) : ?>
-    <?php foreach ( $attributes['errors'] as $error ) : ?>
-    <p>
+    <?php if (count($attributes['errors']) > 0) :
+        foreach ($attributes['errors'] as $error) : ?>
+    <p class="registration-error">
         <?php echo $error; ?>
     </p>
-    <?php endforeach; ?>
-    <?php endif; endif;?>
+    <?php endforeach;
+    endif; ?>
 
+    <h2 class="Registration__title"><?php _e($attributes['title'], 'revolt-framework') ?></h2>
 
+    <form action="<?php echo esc_url(admin_url('admin-post.php')); ?>" method="post" autocomplete="off">
 
-    <form action="<?php echo admin_url('admin-post.php'); ?>" method="post" autocomplete="on">
+        <input type="hidden" name="action" value="revolt_emp_registration_form_hook">
+        <?php wp_nonce_field('register_new_employer', 'revolt-emp-registration-nonce'); ?>
+        <div class="Registration__username">
+            <label for="username"><?php _e('Username', 'revolt-framework'); ?> <strong>*</strong></label>
+            <div>
+                <input type="text" name="username" value="" class="Registration__input" placeholder="Username" autocomplete="off" required>
+            </div>
 
-        <input type="hidden" name="action" value="lofi_registration_form_action">
-        <?php wp_nonce_field( 'lofi_registration_form_action', 'lofi-registration-nonce' ); ?>
-        <div class="form-row">
-            <label for="username"><?php _e( 'Username', 'lofi-framework' ); ?> <strong>*</strong></label>
-            <input type="text" name="username" value="">
         </div>
 
-        <div class="form-row">
-            <label for="email"><?php _e( 'Email', 'lofi-framework' ); ?> <strong>*</strong></label>
-            <input type="email;" name="email" id="email" value="">
+        <div class="Registration__email">
+            <label for="email"><?php _e('Email', 'revolt-framework'); ?> <strong>*</strong></label>
+            <div>
+                <input type="email" name="email" value="" class="Registration__input" placeholder="Your Email" autocomplete="off" required>
+            </div>
         </div>
 
-        <div class="form-row">
-            <label for="password"><?php _e( 'Password', 'lofi-framework' ); ?> <strong>*</strong></label>
-            <input type="password" name="password" id="password" value="">
+        <div class="Registration__password">
+            <label for="password"><?php _e('Password', 'revolt-framework'); ?> <strong>*</strong></label>
+            <div>
+                <input type="password" name="password" value="" class="Registration__input" class="Your Password" autocomplete="off" required>
+            </div>
         </div>
 
-        <?php if ( $attributes['recaptcha_site_key'] ) : ?>
+        <?php if ($attributes['recaptcha_site_key']) : ?>
         <div class="recaptcha-container">
-            <div class="g-recaptcha" data-sitekey="<?php echo $attributes['recaptcha_site_key']; ?>"></div>
-            </i>
-            <?php endif; ?>
+            <div class="g-recaptcha" data-sitekey="<?php echo esc_html($attributes['recaptcha_site_key']); ?>"></div>
+        </div>
+        <?php endif; ?>
 
-            <p class="signup-submit">
-                <input type="submit" name="submit_lofi_employer" class="register-button"
-                    value="<?php echo esc_attr__( $attributes['button_text'] ); ?>" <?php if($attributes['disabled']):
-                       ?> disabled <?php
-                   endif;
-                   ?> style="cursor:pointer;" />
-            </p>
+        <div class="Registration__submit">
+            <button type="submit" class="Registration__submitBtn" <?php disabled($attributes['disabled'], true) ?>>
+                <?php esc_html_e($attributes['button_text'], 'revolt-framework'); ?>
+            </button>
+        </div>
     </form>
 </div>

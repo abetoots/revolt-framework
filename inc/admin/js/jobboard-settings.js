@@ -34,7 +34,7 @@
             let confirmAction = confirm('Are you sure you want to remove the Profile Picture?');
             if (confirmAction == true) {
                 $('#employer-photo').val('');
-                $('.lofi-job-board-form').submit();
+                $('.revolt-job-board-form').submit();
             }
             return;
         });//remove button end

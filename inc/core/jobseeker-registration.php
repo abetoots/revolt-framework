@@ -1,0 +1,208 @@
+<?php
+
+namespace Revolt_Framework\Core;
+
+use WP_Error;
+use function Revolt_Framework\Core\Helpers\Registration\{
+    get_template_html,
+    get_error_message,
+    verify_recaptcha,
+    validate_and_register_new_user
+};
+
+if (!defined('ABSPATH')) exit; // Exit if accessed directly
+
+class Jobseeker_Registration
+{
+    /**
+     * A shortcode for rendering the new user registration form.
+     *
+     * @since 1.0.0
+     * @access public
+     * 
+     * @param  array   $attributes  Shortcode attributes.
+     * @param  string  $content     The text content for shortcode. Not used.
+     *
+     * @return string  The shortcode output
+     */
+    public function render_registration_form($user_attributes, $content = null)
+    {
+
+        // normalize attribute keys, lowercase
+        $user_attributes = array_change_key_case((array) $user_attributes, CASE_LOWER);
+        // Parse shortcode attributes
+        $default_attributes = array(
+            'title'         => 'Register as a Job Seeker',
+            'button_text'   => 'Register',
+            'disabled'      => false,
+        );
+        $attributes = shortcode_atts($default_attributes, $user_attributes);
+
+        // Retrieve recaptcha key
+        $attributes['recaptcha_site_key'] = get_option('revolt_recaptcha_site_key', null);
+
+
+
+        if (is_user_logged_in()) {
+            return 'You are logged in';
+        } elseif (!get_option('users_can_register')) {
+            return __('Registering new users is currently not allowed.', 'revolt-framework');
+        } else {
+
+            // Retrieve possible errors from request parameters
+            $attributes['errors'] = array();
+            if (isset($_REQUEST['registration-err'])) {
+                $error_codes = explode(',', $_REQUEST['registration-err']);
+
+                foreach ($error_codes as $error_code) {
+                    $attributes['errors'][] = get_error_message($error_code);
+                }
+            }
+
+            // Rendering of html is done here
+            return get_template_html('registration_form_jobseeker', $attributes);
+        }
+    }
+
+    /**
+     * Handles form when submitted to admin-post.php
+     *
+     * @since 1.0.0
+     * @access public
+     * 
+     *
+     * @uses $this->do_register_jobseeker();
+     */
+    public function handle_form_response()
+    {
+
+
+        if (!isset($_POST['revolt-js-registration-nonce'])) {
+            wp_die('first');
+        }
+
+        if (!wp_verify_nonce($_POST['revolt-js-registration-nonce'], 'register_new_jobseeker')) {
+            wp_die('second');
+        }
+
+        if (is_user_logged_in()) { //prevent submitting of registration form when logged in
+            return;
+        }
+
+
+        $username =  $_POST['username'];
+        $email =  $_POST['email'];
+        $password = $_POST['password'];
+
+        //Handles validation and redirect
+        $this->do_register_jobseeker($username, $email, $password);
+    }
+
+    /**
+     * Handles the registration of a new user.
+     *
+     * @since 1.0.0
+     * @access public
+     * 
+     * 
+     * @uses $this->validate_and_register_jobseeker()
+     */
+    public function do_register_jobseeker($username, $email, $password)
+    {
+        $redirect_url = home_url('register-jobseeker');
+
+        if (!get_option('users_can_register')) {
+            $errors = new WP_Error();
+            // Registration closed, display error
+            $redirect_url = add_query_arg('registration-err', 'closed', $redirect_url);
+        } elseif (!verify_recaptcha()) {
+            //Recaptcha check failed, display error
+            $redirect_url = add_query_arg('registration-err', 'captcha', $redirect_url);
+        } else {
+            //either an error or the user id
+            $result = validate_and_register_new_user($username, $email, $password);
+
+            if (is_wp_error($result)) {
+                // Parse errors into a string and append as parameter to redirect
+                $errors = join(',', $result->get_error_codes());
+                $redirect_url = add_query_arg('registration-err', $errors, $redirect_url);
+            } else {
+                // Success, redirect to login page.
+                $redirect_url = home_url('sign-in');
+                $redirect_url = add_query_arg('registered', $email, $redirect_url);
+            }
+        }
+        wp_redirect($redirect_url);
+        exit;
+    }
+
+    /**
+     * An action function used to include the reCAPTCHA JavaScript file
+     * at the end of the page.
+     */
+    public function add_captcha_js_to_footer()
+    {
+        echo "<script src='https://www.google.com/recaptcha/api.js'></script>";
+    }
+
+    /**
+     * Instance
+     *
+     * @since 1.0.0
+     * @access private
+     * @static
+     *
+     * @var Plugin The single instance of the class.
+     */
+    private static $_instance = null;
+
+    /**
+     * Instance
+     *
+     * Ensures only one instance of the class is loaded or can be loaded.
+     *
+     * @since 1.0.0
+     * @access public
+     *
+     * @return Plugin An instance of the class.
+     */
+    public static function instance()
+    {
+        if (!self::$_instance)
+            self::$_instance = new self();
+        return self::$_instance;
+    }
+
+    /**
+     *  Plugin class constructor
+     *
+     * Register plugin action hooks and filters
+     *
+     * @since 1.0.0
+     * @access public
+     */
+    public function __construct()
+    {
+        $this->init();
+    }
+
+    /**
+     *  Init function that handles all hooks and filters
+     * 
+     * @since 1.0.0
+     * @access public
+     */
+    public function init()
+    {
+
+        //Registration
+        add_shortcode('revolt-reg-form-jobseeker', array($this, 'render_registration_form'));
+
+        // Add captcha javascript to footer
+        add_action('wp_print_footer_scripts', array($this, 'add_captcha_js_to_footer'));
+
+        // Handle form response
+        add_action('admin_post_nopriv_revolt_js_registration_hook', array($this, 'handle_form_response'));
+    }
+}
+Jobseeker_Registration::instance();
