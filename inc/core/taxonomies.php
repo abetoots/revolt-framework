@@ -194,8 +194,6 @@ class Taxonomies
             ));
             unset($term);
         } //endforeach
-
-        wp_insert_term('Sample', 'job_categories');
     }
 
 
