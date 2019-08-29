@@ -3,7 +3,7 @@
 namespace Revolt_Framework\Core;
 
 use WP_Error;
-use function Revolt_Framework\Classes\Helpers\Utilities\Registration\{
+use function Revolt_Framework\Core\Helpers\Registration\{
     get_template_html,
     get_error_message
 };
