@@ -144,10 +144,10 @@ function render_locations_toggle()
 {
     $locationsIsChecked =  esc_attr(get_option('support_locations'));
     ?>
-<label for="support-locations" class="switch">
-    <input type="checkbox" id="support-locations" class="switch__input" name="support_locations" value="1" <?php checked($locationsIsChecked, 1); ?>>
-    <span class="switch__slider"></span>
-</label>
+    <label for="support-locations" class="switch">
+        <input type="checkbox" id="support-locations" class="switch__input" name="support_locations" value="1" <?php checked($locationsIsChecked, 1); ?>>
+        <span class="switch__slider"></span>
+    </label>
 <?php
 }
 
@@ -176,5 +176,5 @@ function render_recaptcha_secret_key()
  */
 function generate_page()
 {
-    require_once REVOLT_FRAMEWORK_DIR . 'inc/admin/admin-templates/admin-jobboard-settings.php';
+    require_once REVOLT_FRAMEWORK_DIR . 'admin/admin-templates/admin-jobboard-settings.php';
 }
