@@ -1,0 +1,28 @@
+@import '../../../variables.scss';
+
+.ProfileBanner {
+    width: 100%;
+    height: 15%;
+    padding: 20px;
+    box-sizing: border-box;
+
+    &__block {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    &__photo {
+        width: $photoWidth;
+        height: $photoHeight;
+        vertical-align: middle;
+        border-radius: 50%;
+    }
+
+    &__icon {
+        padding: 10px;
+        border-radius: 50%;
+        background-color: gray;
+        color: white;
+    }
+}

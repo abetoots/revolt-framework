@@ -1,0 +1,45 @@
+.List {
+    box-sizing: border-box;
+    background-color: white;
+    border-radius: 20px;
+    border: 1px solid #ccc;
+    box-shadow: 0 0 5px 1px #ccc;
+
+    &__heading {
+        text-align: center;
+        padding: 20px;
+    }
+
+    &__tabs {
+        padding: 10px;
+    }
+
+    &__tab {
+        background-color: inherit;
+        border: none;
+        outline: none;
+        cursor: pointer;
+        color: #7361E2;
+    }
+
+    &__output {
+        background-color: #F4F6F8;
+        min-height: 300px;
+        padding: 20px;
+    }
+
+    &__actionBlock {
+        padding: 20px;
+        text-align: center;
+    }
+
+    &__actionButton {
+        border: none;
+        outline: none;
+        cursor: pointer;
+        padding: 10px;
+        border-radius: 30px;
+        background-color: #7461E3;
+        color: white;
+    }
+}

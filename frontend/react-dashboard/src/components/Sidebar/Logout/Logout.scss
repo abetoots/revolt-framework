@@ -1,0 +1,15 @@
+.Logout {
+    &__icon {
+        padding-right: 10px;
+    }
+
+    &__link {
+        color: inherit;
+        text-decoration: none;
+        width: 100%;
+
+        &:hover {
+            color: red;
+        }
+    }
+}

@@ -1,0 +1,86 @@
+.Job {
+    $self: &;
+    $photoWidth: 1.2rem;
+    $photoHeight: 1.2rem;
+    width: 80%;
+    border: 1px solid #ccc;
+    padding: 20px;
+    margin: 10px 0;
+    background-color: white;
+    border-radius: 20px;
+    display: grid;
+    align-items: center;
+    grid-template-columns: 10% 40% 1fr;
+
+    &__infoBlock {
+        padding: 0 15px;
+    }
+
+    &__title {
+        font-size: 1.25em;
+    }
+
+    &__employerPhoto {
+        border-radius: 50px;
+        width: $photoWidth;
+        height: $photoHeight;
+    }
+
+    &__icon {
+        padding: 10px;
+        border-radius: 50%;
+        background-color: gray;
+        color: white;
+    }
+
+    &__employerName {
+        display: inline-block;
+        font-size: 1em;
+        font-weight: 400;
+    }
+
+    &__location {
+        font-family: "Nunito", "Helvetica", sans-serif;
+        border-radius: 3px;
+        font-weight: 800;
+        text-transform: uppercase;
+        background-color: #737373;
+        color: #fff;
+        padding: 0 .35em 0;
+        max-width: 12em;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        font-size: .8em;
+        margin-right: 5px;
+    }
+
+    &__verified {
+        margin-right: 5px;
+        display: inline-block;
+        font-size: .8em;
+
+        &.-true {
+            #{$self}__isVerified {
+                background-color: rgb(181, 252, 181);
+                color: rgb(2, 117, 2);
+            }
+        }
+
+        &.-false {
+            #{$self}__isVerified {
+                background-color: rgb(245, 157, 157);
+                color: rgb(172, 6, 6);
+            }
+        }
+    }
+
+    &__isVerified {
+        width: fit-content;
+        padding: 3px 5px;
+        border-radius: 3px;
+    }
+
+    &__tagsBlock {
+        margin: 0 5px;
+    }
+}

@@ -1,0 +1,8 @@
+@import './variables.scss';
+
+.RevoltReactDashboard {
+    @include tablet-above {
+        display: grid;
+        grid-template-columns: minmax(200px, 315px) 1fr;
+    }
+}

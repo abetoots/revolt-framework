@@ -1,0 +1,10 @@
+.Available{
+    text-align: center;
+}
+.Available.-true{
+    color: #73B743;
+}
+
+.Available.-false{
+    color: #C20001;
+}

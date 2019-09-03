@@ -1,0 +1,18 @@
+.JobTag{
+    cursor: pointer;
+    color: #000;
+    border: 2px solid #000;
+    padding: .33em;
+    margin: .2em;
+    display: inline-block;
+    vertical-align: middle;
+    text-transform: uppercase;
+    font-weight: 700;
+    font-family: "Nunito", sans-serif;
+    font-size: .65em;
+}
+
+.JobTag:hover{
+    background-color: #000;
+    color: white;
+}

@@ -1,0 +1,10 @@
+.Sidebar{
+    height: 100vh;
+    position: sticky;
+    top: 0;
+    background-color: #292C5D;
+    color: white;
+    padding: 10px;
+    box-sizing: border-box;
+    box-shadow: 1px 0px 10px 0px rgba(0,0,0,0.34);
+}

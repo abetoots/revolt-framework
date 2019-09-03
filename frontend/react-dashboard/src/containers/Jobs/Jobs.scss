@@ -1,0 +1,14 @@
+.Jobs {
+    display: flex;
+    flex-flow: column;
+
+    &__edit {
+        display: flex;
+        align-items: center;
+    }
+
+    &__button {
+        margin: 0 auto;
+        height: fit-content;
+    }
+}

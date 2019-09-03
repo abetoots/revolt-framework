@@ -177,7 +177,7 @@ function get_template_html($template_name, $attributes = null)
 
     do_action('revolt_customize_before_' . $template_name);
 
-    require(REVOLT_FRAMEWORK_DIR . 'public/html-templates/' . $template_name . '.php');
+    require(REVOLT_FRAMEWORK_DIR . 'frontend/html-templates/' . $template_name . '.php');
 
     do_action('revolt_customize_after_' . $template_name);
 
