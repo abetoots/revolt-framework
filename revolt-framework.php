@@ -25,9 +25,14 @@ if (!defined('ABSPATH')) exit; // Exit if accessed directly
  */
 define('REVOLT_FRAMEWORK_DIR', plugin_dir_path(__FILE__));
 define('REVOLT_FRAMEWORK_URL', plugin_dir_url(__FILE__));
+define('REVOLT_REACT_DIR', plugin_dir_path(__FILE__) . '/frontend/react-dashboard');
+define('REVOLT_REACT_URL', plugin_dir_url(__FILE__) . 'frontend/react-dashboard');
+define('REVOLT_REACT_BUILD_URL', REVOLT_REACT_URL . '/build');
+define('REVOLT_REACT_ASSET_MANIFEST', REVOLT_REACT_DIR . '/build/asset-manifest.json');
+
 
 define('REVOLT_ACF_PATH', REVOLT_FRAMEWORK_DIR . '/inc/libraries/acf/');
-define('REVOLT_ACF_URL', REVOLT_FRAMEWORK_URL . '/inc/libraries/acf/');
+define('REVOLT_ACF_URL', REVOLT_FRAMEWORK_URL . 'inc/libraries/acf/');
 
 /**
  * Main Revolt Framework Class
@@ -252,24 +257,27 @@ function rewrite_flush_on_activation()
         'dashboard'      => array(
             'title'     => __('Employer Dashboard ReactJS', 'revolt-framework'),
             'content'   => '',
-            'template'  => ''
+            'template'  => 'react-dashboard.php'
         ),
         'sign-in' => array(
             'title' => __('Sign In', 'revolt-framework'),
-            'content'   => '[revolt-login-form]'
+            'content'   => '[revolt-login-form]',
+            'template'  => ''
         ),
         'registration'  => array(
             'title' => __('Register', 'revolt-framework'),
             'content'   => '',
+            'template'  => ''
         ),
         'profile' => array(
             'title' => __('JobSeeker Profile Page', 'revolt-framework'),
             'content'       => '',
-            'template'      => 'revolt-profile.php',
+            'template'      => '',
             'child'         => array(
                 'slug'      => 'edit',
                 'title' => __('Edit Profile', 'revolt-framework'),
-                'content'   => ''
+                'content'   => '',
+                'template'  => '',
             )
         ),
     );
@@ -301,6 +309,7 @@ function insert_pages($page_definitions)
     foreach ($page_definitions as $slug => $page) {
         // Check that the page doesn't exist already
         $query = new WP_Query('pagename=' . $slug);
+        $template = $page['template'] ? $page['template'] : '';
         //Assign a page template, defaults to empty if no page_template is set above
         if (!$query->have_posts()) {
             // Add the page using the data from the array above
@@ -319,8 +328,16 @@ function insert_pages($page_definitions)
                 )
             );
 
+            //store the id to properly check when to enqueue and serve our react app
+            if ($slug === 'dashboard') {
+                update_option('revolt_react_dashboard_page', $id);
+            }
+
             // For some reason, post_template is not working. We update it manually.
-            // update_post_meta($id, '_wp_page_template', $template);
+            if ($template !== '') {
+                update_post_meta($id, '_wp_page_template', $template);
+            }
+
             //Handle inserting of child page if specified
             if (array_key_exists('child', $page)) {
                 $childId = wp_insert_post(
@@ -338,9 +355,9 @@ function insert_pages($page_definitions)
                         )
                     )
                 );
-                // if ($page['child']['template'] !== '') {
-                // update_post_meta($childId, '_wp_page_template', $child_template);
-                // }
+                if ($page['child']['template'] !== '') {
+                    update_post_meta($childId, '_wp_page_template', $page['child']['template']);
+                }
             }
         }
     }
