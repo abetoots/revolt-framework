@@ -1,6 +1,6 @@
 <?php
 
-namespace Revolt_Framework\Core;
+namespace Revolt_Framework\Inc\Core;
 
 if (!defined('ABSPATH')) exit; // Exit if accessed directly
 class CustomPostType
@@ -61,7 +61,7 @@ class CustomPostType
             'show_in_nav_menus'     => false,
             'show_in_menu'          => true,
             'menu_position'         => 5,
-            'supports'              => array('title', 'author', 'custom-fields'),
+            'supports'              => array('title', 'editor', 'author', 'custom-fields'),
             'menu_icon'             => $image, // refer to inc/revolt-metaboxes.php
             'has_archive'           => true,
             'sort'                  => false,
@@ -81,6 +81,19 @@ class CustomPostType
             'single'            => false
         ));
     }
+
+    /**
+     * Prevents the use of Gutenberg as the default editor experience
+     */
+    public function do_not_use_gutenberg_editor($use_block_editor, $post_type)
+    {
+        if ('revolt-job-post' === $post_type) {
+            return false;
+        }
+
+        return $use_block_editor;
+    }
+
 
 
     /**
@@ -178,6 +191,7 @@ class CustomPostType
             'edit_revolt_job_posts',
             'edit_published_revolt_job_posts',
             'publish_revolt_job_posts',
+            'upload_files'
         );
         foreach ($empcaps as $cap) {
             $employer->add_cap($cap); //defaults
@@ -189,6 +203,7 @@ class CustomPostType
             'read_revolt_job_post',
             'edit_revolt_job_post',
             'edit_revolt_job_posts',
+            'upload_files'
         );
         foreach ($seekercaps as $cap) {
             $jobseeker->add_cap($cap); //defaults
@@ -219,6 +234,8 @@ class CustomPostType
 
         //Register Custom Post Type
         add_action('init', array($this, 'register_custom_post_type'));
+        //Do not use Gutenberg Editor
+        add_filter('use_block_editor_for_post_type', array($this, 'do_not_use_gutenberg_editor'), 10, 2);
         //Add Role and Caps to 'Employer' and 'Administrator'
         $this->register_role_and_caps();
     }

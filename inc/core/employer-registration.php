@@ -1,9 +1,9 @@
 <?php
 
-namespace Revolt_Framework\Core;
+namespace Revolt_Framework\Inc\Core;
 
 use WP_Error;
-use function Revolt_Framework\Core\Helpers\Registration\{
+use function Revolt_Framework\Inc\Helpers\Registration\{
     get_template_html,
     get_error_message,
     verify_recaptcha,
@@ -42,6 +42,8 @@ class Employer_Registration
 
         if (!get_option('users_can_register')) {
             return __('Registering new users is currently not allowed.', 'revolt-framework');
+        } elseif (!get_option('allow_jobboard_registration')) {
+            return __('Job Board Registration is currently not allowed.', 'revolt-framework');
         } elseif (is_user_logged_in()) {
             return 'You are logged in';
         } else {
@@ -72,11 +74,11 @@ class Employer_Registration
      */
     public function handle_form_response()
     {
-        if (!isset($_POST['revolt-emp-registration-nonce'])) {
+        if (!isset($_POST['register_employer_nonce'])) {
             wp_die('first');
         }
 
-        if (!wp_verify_nonce($_POST['revolt-emp-registration-nonce'], 'register_new_employer')) {
+        if (!wp_verify_nonce($_POST['register_employer_nonce'], 'register_employer_form_nonce')) {
             wp_die('second');
         }
 
@@ -103,19 +105,24 @@ class Employer_Registration
      */
     public function do_register_employer($username, $email, $password)
     {
-        $redirect_url = home_url('register-employer');
+        $redirect_url = home_url('registration');
         $errors = new WP_Error();
 
         if (!get_option('users_can_register')) {
             // Registration closed, display error
             $redirect_url = add_query_arg('registration-err', 'closed', $redirect_url);
-        } elseif (!verify_recaptcha()) {
-            // Recaptcha check failed, display error
-            $redirect_url = add_query_arg('registration-err', 'captcha', $redirect_url);
+        } elseif (!get_option('allow_jobboard_registration')) {
+            // Job board registration disabled, display error
+            $redirect_url = add_query_arg('registration-err', 'disabled', $redirect_url);
+        } elseif (get_option('revolt_recaptcha_site_key') && get_option('revolt_recaptcha_secret_key')) {
+            if (!verify_recaptcha()) {
+                //Recaptcha check failed, display error
+                $redirect_url = add_query_arg('registration-err', 'captcha', $redirect_url);
+            }
         } else {
 
             //either an error or the user id
-            $result = validate_and_register_new_user($username, $email, $password);
+            $result = validate_and_register_new_user($username, $email, $password, 'employer');
 
             if (is_wp_error($result)) {
                 // Parse errors into a string and append as parameter to redirect
@@ -196,7 +203,7 @@ class Employer_Registration
         add_action('wp_print_footer_scripts', array($this, 'add_captcha_js_to_footer'));
 
         // Handle form response
-        add_action('admin_post_nopriv_revolt_emp_registration_form_hook', array($this, 'handle_form_response'));
+        add_action('admin_post_nopriv_revolt_register_employer', array($this, 'handle_form_response'));
     }
 }
 Employer_Registration::instance();

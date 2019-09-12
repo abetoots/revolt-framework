@@ -1,9 +1,9 @@
 <?php
 
-namespace Revolt_Framework\Core;
+namespace Revolt_Framework\Inc\Core;
 
 use WP_Error;
-use function Revolt_Framework\Core\Helpers\Registration\{
+use function Revolt_Framework\Inc\Helpers\Registration\{
     get_template_html,
     get_error_message
 };
@@ -74,6 +74,10 @@ class Login
             $attributes['redirect'] = wp_validate_redirect($_REQUEST['redirect_to'], $attributes['redirect']);
         }
 
+        if (isset($_REQUEST['registered'])) {
+            $attributes['new_user'] = true;
+        }
+
         // Error messages
         $attributes['errors'] = array();
         if (isset($_REQUEST['login-err'])) {
@@ -104,16 +108,10 @@ class Login
     {
         $redirect_url = home_url();
 
-
-
         if (!isset($user->ID)) {
             return $redirect_url;
         }
-
-        //TODO maybe check the whole array
         $role_name = $user->roles[0];
-
-
         if (user_can($user, 'manage_options')) {
             // Use the redirect_to parameter if one is set, otherwise redirect to admin dashboard.
             if ($redirect_to) {

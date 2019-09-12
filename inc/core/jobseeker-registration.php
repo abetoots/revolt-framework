@@ -1,9 +1,9 @@
 <?php
 
-namespace Revolt_Framework\Core;
+namespace Revolt_Framework\Inc\Core;
 
 use WP_Error;
-use function Revolt_Framework\Core\Helpers\Registration\{
+use function Revolt_Framework\Inc\Helpers\Registration\{
     get_template_html,
     get_error_message,
     verify_recaptcha,
@@ -41,12 +41,12 @@ class Jobseeker_Registration
         // Retrieve recaptcha key
         $attributes['recaptcha_site_key'] = get_option('revolt_recaptcha_site_key', null);
 
-
-
-        if (is_user_logged_in()) {
-            return 'You are logged in';
-        } elseif (!get_option('users_can_register')) {
+        if (!get_option('users_can_register')) {
             return __('Registering new users is currently not allowed.', 'revolt-framework');
+        } elseif (!get_option('allow_jobboard_registration')) {
+            return __('Job Board Registration is currently not allowed.', 'revolt-framework');
+        } elseif (is_user_logged_in()) {
+            return 'You are logged in';
         } else {
 
             // Retrieve possible errors from request parameters
@@ -77,11 +77,11 @@ class Jobseeker_Registration
     {
 
 
-        if (!isset($_POST['revolt-js-registration-nonce'])) {
+        if (!isset($_POST['register_jobseeker_nonce'])) {
             wp_die('first');
         }
 
-        if (!wp_verify_nonce($_POST['revolt-js-registration-nonce'], 'register_new_jobseeker')) {
+        if (!wp_verify_nonce($_POST['register_jobseeker_nonce'], 'register_jobseeker_form_nonce')) {
             wp_die('second');
         }
 
@@ -109,18 +109,23 @@ class Jobseeker_Registration
      */
     public function do_register_jobseeker($username, $email, $password)
     {
-        $redirect_url = home_url('register-jobseeker');
+        $redirect_url = home_url('registration');
+        $errors = new WP_Error();
 
         if (!get_option('users_can_register')) {
-            $errors = new WP_Error();
             // Registration closed, display error
             $redirect_url = add_query_arg('registration-err', 'closed', $redirect_url);
-        } elseif (!verify_recaptcha()) {
-            //Recaptcha check failed, display error
-            $redirect_url = add_query_arg('registration-err', 'captcha', $redirect_url);
+        } elseif (!get_option('allow_jobboard_registration')) {
+            // Job board registration disabled, display error
+            $redirect_url = add_query_arg('registration-err', 'disabled', $redirect_url);
+        } elseif (get_option('revolt_recaptcha_site_key') && get_option('revolt_recaptcha_secret_key')) {
+            if (!verify_recaptcha()) {
+                //Recaptcha check failed, display error
+                $redirect_url = add_query_arg('registration-err', 'captcha', $redirect_url);
+            }
         } else {
             //either an error or the user id
-            $result = validate_and_register_new_user($username, $email, $password);
+            $result = validate_and_register_new_user($username, $email, $password, 'jobseeker');
 
             if (is_wp_error($result)) {
                 // Parse errors into a string and append as parameter to redirect
@@ -202,7 +207,7 @@ class Jobseeker_Registration
         add_action('wp_print_footer_scripts', array($this, 'add_captcha_js_to_footer'));
 
         // Handle form response
-        add_action('admin_post_nopriv_revolt_js_registration_hook', array($this, 'handle_form_response'));
+        add_action('admin_post_nopriv_revolt_register_jobseeker', array($this, 'handle_form_response'));
     }
 }
 Jobseeker_Registration::instance();

@@ -1,6 +1,6 @@
 <?php
 
-namespace Revolt_Framework\Core;
+namespace Revolt_Framework\Inc\Core;
 
 
 if (!defined('ABSPATH')) exit; // Exit if accessed directly
@@ -91,7 +91,7 @@ class Taxonomies
             'show_ui'               => true,
             'meta_box_cb'           => false,
             'show_in_menu'          => true,
-            'show_in_rest'          => false,
+            'show_in_rest'          => true,
             'show_admin_column'     => true,
             'show_in_quick_edit'    => false,
             'query_var'             => true,
@@ -106,6 +106,51 @@ class Taxonomies
             )
         );
         register_taxonomy('job_categories', array('revolt-job-post'), $args);
+    }
+
+    /**
+     * Insert some default taxonomy terms to : Employment Types
+     * 
+     * @since 1.0.0
+     * @access public
+     * 
+     * @uses wp_insert_term();
+     */
+    public function insert_initial_job_categories()
+    {
+        $taxonomy = 'job_categories';
+        $terms = array(
+            '0' => array(
+                'name'          => 'Web Development',
+                'slug'          => 'web-development'
+            ),
+
+            '1' => array(
+                'name'          => 'WordPress',
+                'slug'          => 'wordpress'
+            ),
+
+            '2' => array(
+                'name'          => 'Virtual Assistant',
+                'slug'          => 'virtual-assistant'
+            ),
+
+            '3' => array(
+                'name'          => 'Front End Developer',
+                'slug'          => 'front-end'
+            ),
+            '4' => array(
+                'name'          => 'Graphic Designer',
+                'slug'          => 'graphic-design'
+            )
+        );
+
+        foreach ($terms as $term_key => $term) {
+            wp_insert_term($term['name'], $taxonomy, array(
+                'slug'          => $term['slug']
+            ));
+            unset($term);
+        } //endforeach
     }
 
 
@@ -138,7 +183,7 @@ class Taxonomies
             'show_ui'               => true,
             'meta_box_cb'           => false,
             'show_in_menu'          => true,
-            'show_in_rest'          => false,
+            'show_in_rest'          => true,
             'show_admin_column'     => true,
             'show_in_quick_edit'    => false,
             'query_var'             => true,
@@ -219,7 +264,7 @@ class Taxonomies
             'update_item'           => __('Update Item'),
             'add_new_item'          => __('Add New Premium Package'),
             'new_item_name'         => __('New Premium Package'),
-            'menu_name'             => __('Premium Type')
+            'menu_name'             => __('Premium Package Types')
         );
         $args =      array(
             'hierarchical'          => true,
@@ -227,7 +272,7 @@ class Taxonomies
             'show_ui'               => true,
             'meta_box_cb'           => false,
             'show_in_menu'          => true,
-            'show_in_rest'          => false,
+            'show_in_rest'          => true,
             'show_admin_column'     => true,
             'show_in_quick_edit'    => false,
             'query_var'             => true,
@@ -315,6 +360,7 @@ class Taxonomies
         add_action('init', array($this, 'add_taxonomy_caps_to_roles'), 11);
         //Register Taxonomy: Job Categories
         add_action('init', array($this, 'register_taxonomy_job_categories'));
+        add_action('init', array($this, 'insert_initial_job_categories'));
         //Register Taxonomy: Employment Types, Add Initial Terms
         add_action('init', array($this, 'register_taxonomy_employment_types'));
         add_action('init', array($this, 'insert_initial_employment_terms'));
