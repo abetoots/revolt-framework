@@ -54,15 +54,16 @@ class Plugin
         require_once(REVOLT_FRAMEWORK_DIR . 'inc/core/employer-registration.php');
         require_once(REVOLT_FRAMEWORK_DIR . 'inc/core/jobseeker-registration.php');
         require_once(REVOLT_FRAMEWORK_DIR . 'inc/core/login.php');
-        require_once(REVOLT_FRAMEWORK_DIR . 'admin/settings-jobboard.php');
         require_once(REVOLT_FRAMEWORK_DIR . 'inc/core/taxonomies.php');
-        require_once(REVOLT_FRAMEWORK_DIR . 'inc/core/helpers/acf.php');
-        require_once(REVOLT_FRAMEWORK_DIR . 'inc/core/helpers/api.php');
-        require_once(REVOLT_FRAMEWORK_DIR . 'inc/core/helpers/columns.php');
-        require_once(REVOLT_FRAMEWORK_DIR . 'inc/core/helpers/registration.php');
-        require_once(REVOLT_FRAMEWORK_DIR . 'inc/core/helpers/rewrite.php');
-        require_once(REVOLT_FRAMEWORK_DIR . 'inc/core/helpers/utilities.php');
-        require_once(REVOLT_FRAMEWORK_DIR . 'inc/core/helpers/react.php');
+        require_once(REVOLT_FRAMEWORK_DIR . 'inc/helpers/acf.php');
+        require_once(REVOLT_FRAMEWORK_DIR . 'inc/helpers/api.php');
+        require_once(REVOLT_FRAMEWORK_DIR . 'inc/helpers/columns.php');
+        require_once(REVOLT_FRAMEWORK_DIR . 'inc/helpers/registration.php');
+        require_once(REVOLT_FRAMEWORK_DIR . 'inc/helpers/rewrite.php');
+        require_once(REVOLT_FRAMEWORK_DIR . 'inc/helpers/utilities.php');
+        require_once(REVOLT_FRAMEWORK_DIR . 'inc/helpers/react.php');
+        require_once(REVOLT_FRAMEWORK_DIR . 'inc/helpers/query.php');
+        require_once(REVOLT_FRAMEWORK_DIR . 'admin/settings-jobboard.php');
     }
 
     /**
