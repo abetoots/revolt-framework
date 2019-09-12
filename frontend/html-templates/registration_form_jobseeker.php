@@ -5,18 +5,19 @@
 
     <?php if (count($attributes['errors']) > 0) :
         foreach ($attributes['errors'] as $error) : ?>
-    <p class="registration-error">
-        <?php echo esc_html($error); ?>
-    </p>
+            <p class="registration-error">
+                <?php echo esc_html($error); ?>
+            </p>
     <?php endforeach;
     endif; ?>
 
     <h2 class="Registration__title"><?php _e($attributes['title'], 'revolt-framework');  ?></h2>
 
+    <?php $nonce = wp_create_nonce('register_jobseeker_form_nonce'); ?>
     <form action="<?php echo esc_url(admin_url('admin-post.php')); ?>" method="post" autocomplete="off">
 
-        <input type="hidden" name="action" value="revolt_js_registration_form_hook">
-        <?php wp_nonce_field('register_new_jobseeker', 'revolt-js-registration-nonce'); ?>
+        <input type="hidden" name="action" value="revolt_register_jobseeker">
+        <input type="hidden" name="register_jobseeker_nonce" value="<?php echo $nonce ?>" />
         <div class="Registration__username">
             <label for="username"><?php _e('Username', 'revolt-framework'); ?> <strong>*</strong></label>
             <div>
@@ -39,9 +40,9 @@
         </div>
 
         <?php if ($attributes['recaptcha_site_key']) : ?>
-        <div class="recaptcha-container">
-            <div class="g-recaptcha" data-sitekey="<?php echo $attributes['recaptcha_site_key']; ?>"></div>
-        </div>
+            <div class="recaptcha-container">
+                <div class="g-recaptcha" data-sitekey="<?php echo $attributes['recaptcha_site_key']; ?>"></div>
+            </div>
         <?php endif; ?>
 
         <div class="Registration__submit">
