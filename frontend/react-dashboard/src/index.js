@@ -9,8 +9,8 @@ import { BrowserRouter } from 'react-router-dom';
 import { createStore, compose, applyMiddleware, combineReducers } from 'redux';
 import { Provider } from 'react-redux';
 import authReducer from './store/reducers/auth';
+import taxonomiesReducer from './store/reducers/taxonomies';
 import jobsReducer from './store/reducers/jobs';
-import jobReducer from './store/reducers/job';
 import profileReducer from './store/reducers/profile';
 import candidatesReducer from './store/reducers/candidates';
 import thunk from 'redux-thunk';
@@ -29,9 +29,9 @@ import * as serviceWorker from './serviceWorker';
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({ trace: true, traceLimit: 25 }) || compose;
 
 const rootReducer = combineReducers({
-    jobs: jobsReducer,
-    job: jobReducer,
     auth: authReducer,
+    jobs: jobsReducer,
+    taxonomies: taxonomiesReducer,
     profile: profileReducer,
     candidates: candidatesReducer
 });
@@ -48,15 +48,18 @@ const store = createStore(withLogoutHandlingReducer, composeEnhancers(
     applyMiddleware(thunk)
 ));
 
+const baseUrl = window.location.hostname === 'localhost' ? '/flerson' : '/flerson.com'
+
 const app = (
     <Provider store={store}>
-        <BrowserRouter>
+        <BrowserRouter basename={baseUrl}>
             <App />
         </BrowserRouter>
     </Provider>
 );
 
-ReactDOM.render(app, document.getElementById('root'));
+const target = document.getElementById('revolt-root');
+if (target) { ReactDOM.render(app, target) };
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.
