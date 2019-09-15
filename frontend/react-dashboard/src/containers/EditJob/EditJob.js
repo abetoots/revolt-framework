@@ -69,7 +69,6 @@ class EditJob extends Component {
         formData['content'] = this.state.model;
         formData['job_acf_fields'] = Object.assign(basicInfoData, taxonomiesData)
 
-        console.log(formData);
         this.props.onEditJob(formData, this.props.job.id, this.props.token, this.props.match.params.jobIndex);
     }
 
@@ -110,7 +109,6 @@ class EditJob extends Component {
         clonedField.touched = true;
         //checkFieldValidity returns true/false
         clonedField.valid = checkFieldValidity(event.target.value, clonedField);
-        console.log(clonedField.value);
         // replace clonedform's appropriate field with the cloned field
         setNested(clonedForm.fields, path, clonedField);
         this.setState({ [parentForm]: clonedForm });

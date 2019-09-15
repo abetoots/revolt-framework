@@ -25,7 +25,6 @@ export const fetchProfile = () => {
     return dispatch => {
         dispatch(fetchProfileStart());
         let userName = localStorage.getItem('userName');
-        console.log(userName)
         if (userName) {
             axios.get(`/wp-json/wp/v2/users/?slug=${userName}`)
                 .then(response => {

@@ -26,7 +26,6 @@ export const fetchJobs = (userId) => {
         dispatch(fetchJobsStart());
         axios.get("/wp-json/wp/v2/revolt-job-post?author=" + userId)
             .then(response => {
-                console.log(response);
                 const fetchedJobs = response.data.map(job => {
                     return {
                         id: job.id,
@@ -43,7 +42,6 @@ export const fetchJobs = (userId) => {
                 dispatch(fetchJobsSuccess(fetchedJobs));
             })
             .catch(error => {
-                console.log(error);
                 dispatch(fetchJobsFailed(error));
             })
     }
@@ -53,7 +51,6 @@ export const countApplicants = jobs => {
     let count = 0;
     jobs.forEach(job => {
         job.applicants.forEach(() => count++);
-        console.log(count);
     })
     return count;
 }
