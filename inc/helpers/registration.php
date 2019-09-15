@@ -19,52 +19,53 @@ if (!defined('ABSPATH')) {
  */
 function validate_and_register_new_user($username, $email, $password, $role)
 {
-    $errors = new WP_Error();
+    $errors = array();
 
     //Username, password and email are required and must not be left out
     if (empty($username) || empty($email) || empty($password)) {
-        $errors->add('empty_field', get_error_message('empty_field'));
-        return $errors;
+        $errors[] = 'empty_field';
     }
 
     //Make sure the number of username characters is not less than 4
     if (4 > strlen($username)) {
-        $errors->add('username_length', get_error_message('username_length'));
-        return $errors;
+        $errors[] = 'username_length';
     }
 
     //Check if the username is already registered
     if (username_exists($username)) {
-        $errors->add('username_exists', get_error_message('username_exists'));
-        return $errors;
+        $errors[] = 'username_exists';
     }
 
     //Make sure the username is valid
     if (!validate_username($username)) {
-        $errors->add('invalid_username_register', get_error_message('invalid_username_register'));
-        return $errors;
+        $errors[] = 'invalid_username_register';
     }
 
     //Ensure the password entered by users is not less than 5 characters
     if (5 > strlen($password)) {
-        $errors->add('password_length', get_error_message('password_length'));
-        return $errors;
+        $errors[] = 'password_length';
     }
 
     //Check if valid email
     if (!is_email($email)) {
-        $errors->add('email', get_error_message('email'));
-        return $errors;
+        $errors[] = 'email';
     }
 
     //Check if email is already registered
     if (email_exists($email)) {
-        $errors->add('email_exists', get_error_message('email_exists'));
-        return $errors;
+        $errors[] = 'email_exists';
     }
 
+    //return errors if any
+    if (!empty($errors)) {
+        $wp_error = new WP_Error();
+        foreach ($errors as $error) {
+            $wp_error->add($error, get_error_message($error));
+        }
+        return $wp_error;
+    }
 
-    //Sanitize before inserting user data
+    //If we reach here, Sanitize before inserting user data
     $email = sanitize_email($email);
     $username = sanitize_text_field($username);
 
@@ -105,7 +106,7 @@ function get_error_message($error_code)
 
         case 'invalid_username_register':
             return __(
-                "Somehow that username is invalid. Maybe use a different one?",
+                'Somehow that username is invalid. Maybe use a different one?',
                 'revolt-framework'
             );
 
@@ -129,7 +130,7 @@ function get_error_message($error_code)
             //Login Error Codes
         case 'invalid_username':
             return __(
-                "We don't have any users with that email address. Maybe you used a different one when signing up?",
+                "Invalid username/email",
                 'revolt-framework'
             );
 
