@@ -2,7 +2,9 @@
     height: 75%;
     color: inherit;
 
+
     &__list {
+        box-sizing: border-box;
         margin: 0;
         padding: 15px;
         list-style: none;
