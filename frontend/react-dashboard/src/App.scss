@@ -1,8 +1,29 @@
-@import './variables.scss';
+@import './partials/fluid';
+@import './partials/media-queries';
+@import './partials/normalize-font';
+
+
+
 
 .RevoltReactDashboard {
     @include tablet-above {
         display: grid;
         grid-template-columns: minmax(200px, 315px) 1fr;
     }
+
+    font-family: "Poppins",
+    "Segoe UI",
+    "Roboto",
+    "Oxygen",
+    "Ubuntu",
+    "Cantarell",
+    "Fira Sans",
+    "Droid Sans",
+    "Helvetica Neue",
+    sans-serif,
+    -apple-system,
+    BlinkMacSystemFont;
+    background-color: #F3F3F3;
+    position: relative;
+    z-index: 1;
 }
