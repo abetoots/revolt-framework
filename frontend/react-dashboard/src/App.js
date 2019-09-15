@@ -15,55 +15,52 @@ import Sidebar from "./components/Sidebar/Sidebar";
 //Containers
 import Auth from './containers/Auth/Auth';
 import Overview from './containers/Overview/Overview';
-import Candidates from "./containers/Employer/Candidates/Candidates";
-import PageDisplay from "./containers/PageDisplay/PageDisplay";
-import Profile from "./containers/Profile/Profile";
-import PostJob from "./containers/Employer/PostJob/PostJob";
+import Candidates from './containers/Candidates/Candidates';
+import PageDisplay from './containers/PageDisplay/PageDisplay';
 import Jobs from "./containers/Jobs/Jobs";
-import EditJob from "./containers/Employer/EditJob/EditJob";
+import EditJob from "./containers/EditJob/EditJob";
 import Logout from './containers/Logout/Logout';
 
 export class App extends Component {
+
     componentDidMount() {
-        this.props.checkAuthenticationOnMount();
+        this.props.checkTokenOnMount();
+    }
+
+    componentDidUpdate(prevProps, prevState) {
+        if (prevProps.isAuthenticated === false && this.props.isAuthenticated === true) {
+            this.props.fetchProfileOnMount(this.props.userName);
+        }
     }
 
     render() {
         let renderedComp =
             <Aux>
                 <Switch>
-                    <Route path="/login" exact component={Auth} />
-                    <Redirect to="/login" />
-                </Switch>;
+                    <Route path="/dashboard/authenticate" exact component={Auth} />
+                    <Redirect to="/dashboard/authenticate" />
+                </Switch>
             </Aux>
 
-        if (this.props.isAuthenticated) {
-            if (this.props.userRole === 'administrator' || 'employer') {
-                renderedComp =
-                    <Aux>
-                        <Sidebar role={this.props.userRole} userName={this.props.userName} />
-                        <PageDisplay>
-                            <Switch>
-                                <Route path="/login" exact component={Auth} />
-                                <Route path="/overview" exact component={Overview} />
-                                <Route path="/hire" exact component={Candidates} />
-                                <Route path="/profile-settings" exact component={Profile} />
-                                <Route path="/post-job" exact component={PostJob} />
-                                <Route path="/jobs" exact component={Jobs} />
-                                <Route path="/jobs/edit/:jobID" exact component={EditJob} />
-                                <Route path="/logout" exact component={Logout} />
-                                <Redirect to="/overview" />
-                                {/* 
-                            <Route path="/applications" exact component={Applications} />
-
-                              */}
-                            </Switch>
-                        </PageDisplay>
-                    </Aux>;
-            }
+        if (this.props.isAuthenticated && this.props.loadedProfile && !this.props.userIsNew) {
+            renderedComp =
+                <Aux>
+                    <Sidebar userName={this.props.userName} />
+                    <PageDisplay>
+                        <Switch>
+                            <Route path="/dashboard/authenticate" exact component={Auth} />
+                            <Route path="/dashboard/overview" exact component={Overview} />
+                            <Route path="/dashboard/hire" exact component={Candidates} />
+                            <Route path="/dashboard/jobs" exact component={Jobs} />
+                            <Route path="/dashboard/jobs/edit/:jobIndex" exact component={EditJob} />
+                            <Route path="/dashboard/logout" exact component={Logout} />
+                            <Redirect to="/dashboard/overview" />
+                        </Switch>
+                    </PageDisplay>
+                </Aux>;
         };
         return (
-            <div className={this.props.isAuthenticated ? "RevoltReactDashboard" : ''}>
+            <div className={this.props.loadedProfile ? "RevoltReactDashboard" : ''}>
                 {renderedComp}
             </div>
         );
@@ -72,15 +69,17 @@ export class App extends Component {
 
 const mapStateToProps = state => {
     return {
-        isAuthenticated: state.auth.token !== null,
+        isAuthenticated: state.auth.valid,
         userName: state.auth.userName,
-        userRole: state.auth.userRole
+        loadedProfile: state.profile.loaded,
+        userIsNew: state.profile.isNew
     }
 }
 
 const mapDispatchToProps = dispatch => {
     return {
-        checkAuthenticationOnMount: () => dispatch(actions.checkAuthentication())
+        checkTokenOnMount: () => dispatch(actions.checkToken()),
+        fetchProfileOnMount: (userName) => dispatch(actions.fetchProfile(userName))
     }
 }
 
