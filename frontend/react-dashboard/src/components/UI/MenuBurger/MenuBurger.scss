@@ -1,0 +1,64 @@
+@import '../../../partials/media-queries';
+
+.MenuBurger {
+    $self: &;
+    cursor: pointer;
+    box-sizing: border-box;
+    background-color: transparent;
+    border: none;
+    top: 15px;
+    outline: none;
+    transition: all .3s ease-in;
+    position: fixed;
+    z-index: 200;
+
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+
+    @include tablet-above {
+        display: none;
+    }
+
+    &__bar {
+        //Selector for the bars
+        width: 40px;
+        height: 4px;
+        background-color: black;
+        margin-bottom: 5px;
+        border-radius: 10px;
+        transition: transform 0.5s cubic-bezier(0.77, 0.2, 0.1, 1),
+            background 0.5s cubic-bezier(0.77, 0.2, 0.1, 1),
+            width 0.5s cubic-bezier(0.77, 0.2, 0.1, 1),
+            opacity 0.5s ease;
+
+        &.-one {
+            transform-origin: 0% 0%;
+        }
+
+        &.-three {
+            transform-origin: 0% 100%;
+            margin-bottom: 0;
+        }
+    }
+
+    &.-toggled {
+        margin-left: 75%;
+
+        #{$self}__bar {
+            background-color: #15dfbc;
+            transform: translate(3px, 0);
+
+            &.-one {
+                transform: rotate(45deg) translate(2px, -9px);
+            }
+
+            &.-two {
+                opacity: 0;
+                transform: scale(0.2, 0.2);
+            }
+
+            &.-three {
+                transform: rotate(-45deg) translate(2px, 8px);
+            }
+        }
+    }
+}

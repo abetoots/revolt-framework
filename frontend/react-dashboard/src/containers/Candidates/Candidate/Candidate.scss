@@ -1,0 +1,59 @@
+@import '../../../partials/media-queries';
+
+.Candidate {
+    $self: &;
+
+    border: 1px solid #ccc;
+    padding: 20px;
+    background-color: white;
+    border-radius: 10px;
+    box-sizing: border-box;
+    display: flex;
+    flex-flow: column;
+
+    &__header {
+        display: flex;
+        align-items: center;
+    }
+
+    &__block {
+        margin-bottom: 1em;
+
+        &.-name {
+            padding-left: 1em;
+        }
+
+        &.-action {
+            display: flex;
+            align-items: center;
+            justify-content: space-evenly;
+        }
+    }
+
+    &__name {
+        font-size: 1.4rem;
+        display: block;
+    }
+
+    &__title {
+        font-size: 1rem;
+        font-weight: 600;
+    }
+
+    &__save {
+        color: #F783AC;
+        cursor: pointer;
+
+        &:hover {
+            color: #FF6347;
+        }
+    }
+
+    &__message {
+        cursor: pointer;
+
+        &:hover {
+            color: #25ACDB;
+        }
+    }
+}

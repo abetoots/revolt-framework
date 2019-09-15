@@ -1,0 +1,57 @@
+$fmin-vw: 320px;
+$fmax-vw: 1440px;
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+figure {
+    margin: 0;
+}
+
+h1 {
+    @include fluid-type($fmin-vw, $fmax-vw, 32px, 48px);
+    line-height: 1.25em;
+
+    @include tablet-above {
+        line-height: 1.125em;
+    }
+
+    @include desktop-above {
+        line-height: 1.05em;
+    }
+}
+
+h2 {
+    @include fluid-type($fmin-vw, $fmax-vw, 26px, 36px);
+    line-height: 1.5384615em;
+
+    @include tablet-above {
+        line-height: 1.25em;
+    }
+
+    @include desktop-above {
+        line-height: 1.25em;
+    }
+}
+
+h3 {
+    @include fluid-type($fmin-vw, $fmax-vw, 22px, 28px);
+    line-height: 1.13636364em;
+
+    @include tablet-above {
+        line-height: 1.25em;
+    }
+}
+
+h4 {
+    font-size: 1.125em;
+    line-height: 1.11111111em;
+
+    @include tablet-above {
+        line-height: 1.22222222em;
+    }
+}

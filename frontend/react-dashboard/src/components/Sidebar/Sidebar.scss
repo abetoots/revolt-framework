@@ -1,0 +1,29 @@
+@import '../../partials/media-queries';
+
+.Sidebar {
+    position: fixed;
+    width: 0;
+    top: 0;
+    left: 0;
+    z-index: 150;
+    background-color: #292C5D;
+    overflow: hidden;
+    color: white;
+    transition: all .3s ease-in-out;
+    height: 100%;
+    box-sizing: border-box;
+    box-shadow: 1px 0px 10px 0px rgba(0, 0, 0, 0.34);
+
+    &.-open {
+        width: 75%;
+        padding: 10px;
+    }
+
+    @include tablet-above {
+        height: 100vh;
+        position: sticky;
+        top: 0;
+        width: 100%;
+    }
+
+}

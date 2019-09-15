@@ -1,0 +1,34 @@
+//Variables for media query mixins
+$desktop: 1024px;
+$tablet: 768px;
+$mobile: 320px;
+
+@mixin tablet-above {
+    @media (min-width: #{$tablet}) {
+        @content;
+    }
+}
+
+@mixin tablet-below {
+    @media (max-width: #{$tablet - 1}) {
+        @content;
+    }
+}
+
+@mixin desktop-above {
+    @media (min-width: #{$desktop}) {
+        @content;
+    }
+}
+
+@mixin desktop-below {
+    @media (max-width: #{$desktop - 1}) {
+        @content;
+    }
+}
+
+@mixin mobile {
+    @media (min-width: #{$mobile}) {
+        @content;
+    }
+}

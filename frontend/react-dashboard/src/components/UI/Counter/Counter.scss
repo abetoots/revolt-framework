@@ -1,0 +1,14 @@
+.Counter {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    padding: 15px;
+    box-sizing: border-box;
+    background-color: white;
+
+    &__item {
+        &.-count {
+            font-weight: 700;
+        }
+    }
+}
