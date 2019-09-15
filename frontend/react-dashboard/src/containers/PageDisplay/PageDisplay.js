@@ -1,10 +1,9 @@
 import React, { Component } from 'react';
-import './PageDisplay.css';
+import './PageDisplay.scss';
 class PageDisplay extends Component {
     render() {
         return (
             <section className="PageDisplay">
-                <p>Error Area</p>
                 {this.props.children}
             </section>
         );

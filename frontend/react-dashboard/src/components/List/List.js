@@ -4,7 +4,7 @@ import './List.scss';
 import ListOutput from './ListOutput/ListOutput';
 import Spinner from '../UI/Spinner/Spinner';
 
-const list = (props) => {
+const List = (props) => {
     let listOutput = props.error ? <p>{`${props.listGroup} could not be loaded`}</p> : <Spinner />;
 
     if (!props.loading) {
@@ -54,4 +54,4 @@ const list = (props) => {
     );
 };
 
-export default list;
+export default List;

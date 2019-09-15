@@ -3,7 +3,7 @@ import { NavLink } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import './Logout.scss';
 
-const logout = (props) => (
+const Logout = (props) => (
     <div className="Logout">
         <NavLink to={props.to} exact={props.exact} className="Logout__link" >
             <FontAwesomeIcon className="Logout__icon" icon={['fas', 'sign-out-alt']} />
@@ -12,4 +12,4 @@ const logout = (props) => (
     </div>
 );
 
-export default logout;
+export default Logout;

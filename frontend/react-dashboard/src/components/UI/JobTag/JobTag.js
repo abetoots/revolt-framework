@@ -1,9 +1,9 @@
 import React from 'react';
 import './JobTag.css';
-const tag = (props) => (
+const JobTag = (props) => (
     <div className="JobTag">
-        <h3>{props.tag}</h3>
+        <h4>{props.tag}</h4>
     </div>
 );
 
-export default tag;
+export default JobTag;

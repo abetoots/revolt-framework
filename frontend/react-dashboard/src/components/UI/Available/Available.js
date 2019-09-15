@@ -3,7 +3,7 @@ import './Available.css';
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-const available = (props) => {
+const Available = (props) => {
     let render = '';
     render = props.available ?
         <FontAwesomeIcon className="Available -true" title="Availability" icon={['fas', 'check']} size={props.size} /> :
@@ -16,4 +16,4 @@ const available = (props) => {
     );
 };
 
-export default available;
+export default Available;

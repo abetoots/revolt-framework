@@ -1,17 +1,17 @@
 import React from 'react';
-import './ListOutput.css';
+import './ListOutput.scss';
 
 import Aux from '../../../hoc/Auxiliary';
 
 import PhotoIcon from '../../UI/PhotoIcon/PhotoIcon';
 import Stat from '../../UI/Stat/Stat';
 
-const listOutput = (props) => {
+const ListOutput = (props) => {
     let listItems = '';
     switch (props.group) {
         case 'Saved Candidates':
             listItems =
-                <div className="ListOutput Candidates">
+                <div className='ListOutput -candidates'>
                     <PhotoIcon src={props.data.photoSrc} alt={props.data.name} />
                     <div className="Candidate__nameBlock">
                         <h2 className="Candidate__fullName">{props.data.name}</h2>
@@ -22,8 +22,8 @@ const listOutput = (props) => {
             break;
         case 'Job Posts':
             listItems =
-                <div className="ListOutput JobPosts">
-                    <h2 className="Job__title">{props.data.title}</h2>
+                <div className='ListOutput -jobs'>
+                    <h3 className="Job__title">{props.data.title}</h3>
                     <Stat statName="Views" statCount="2" />
                     <Stat statName="Applications" statCount="3" />
                 </div>
@@ -41,4 +41,4 @@ const listOutput = (props) => {
 
 };
 
-export default listOutput;
+export default ListOutput;

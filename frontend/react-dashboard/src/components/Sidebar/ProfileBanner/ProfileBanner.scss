@@ -1,4 +1,4 @@
-@import '../../../variables.scss';
+@import '../../../partials/media-queries';
 
 .ProfileBanner {
     width: 100%;
@@ -13,8 +13,8 @@
     }
 
     &__photo {
-        width: $photoWidth;
-        height: $photoHeight;
+        width: 48px;
+        height: 48px;
         vertical-align: middle;
         border-radius: 50%;
     }

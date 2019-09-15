@@ -3,7 +3,7 @@ import './ProfileBanner.scss';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-const profileBanner = (props) => (
+const ProfileBanner = (props) => (
     <div className="ProfileBanner">
         <p>Welcome back!</p>
         <div className="ProfileBanner__block">
@@ -17,4 +17,4 @@ const profileBanner = (props) => (
     </div>
 );
 
-export default profileBanner;
+export default ProfileBanner;
