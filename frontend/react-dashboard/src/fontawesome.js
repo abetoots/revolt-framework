@@ -14,6 +14,8 @@ import {
     faIdCardAlt,
     faCog,
     faUser,
+    faLocationArrow,
+    faSpinner,
 } from '@fortawesome/free-solid-svg-icons';
 
 import {
@@ -35,5 +37,7 @@ library.add(
     faCog,
     faUser,
     faHeart,
-    faPaperPlane
+    faPaperPlane,
+    faLocationArrow,
+    faSpinner
 );
