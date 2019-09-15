@@ -191,7 +191,8 @@ class CustomPostType
             'edit_revolt_job_posts',
             'edit_published_revolt_job_posts',
             'publish_revolt_job_posts',
-            'upload_files'
+            'upload_files',
+            'list_users'
         );
         foreach ($empcaps as $cap) {
             $employer->add_cap($cap); //defaults
