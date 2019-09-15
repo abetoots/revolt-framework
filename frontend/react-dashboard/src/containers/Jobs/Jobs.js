@@ -12,52 +12,60 @@ import Button from '../../components/UI/Button/Button';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 class Jobs extends Component {
 
-
     componentDidMount() {
-        console.log('jobs did mount');
-        if (this.props.jobs && !this.props.loading) {
-            this.props.initFetchJobs(this.props.userId);
+        if (!this.props.loadedJobs && !this.props.loading) {
+            this.props.fetchJobsOnMount(this.props.userId);
         }
     }
 
-    editJobClickedHandler(id) {
+    editJobClickedHandler(index) {
         this.props.history.push({
-            pathname: this.props.match.url + '/edit/' + id
+            pathname: this.props.match.url + `/edit/${index}`
         });
     }
     render() {
         //switch between error, spinner, or the jobs
-        let renderedChild = '';
-        renderedChild = this.props.error ? <p>It appears that the jobs cannot be loaded!</p> : <Spinner />;
-        if (this.props.jobs) {
-            renderedChild = (
-                this.props.jobs.map(job => {
-                    return (
-                        <Aux key={job.id}>
-                            <div className="Jobs__edit">
-                                <Job
-                                    id={job.id}
-                                    type={job.type}
-                                    title={job.title}
-                                    name={job.name}
-                                    location={job.accepts}
-                                    verified={job.verified}
-                                    employerPhoto={job.employerPhoto}
-                                    tags={job.tags}
-                                />
-                                <div className="Job__employerButtons">
-                                    <Button clicked={() => this.editJobClickedHandler(job.id)} btnType="action -normal">
-                                        <FontAwesomeIcon icon={['fas', 'edit']} />
-                                    </Button>
-                                    <Button clicked={this.deleteHandler} btnType="action -delete">
-                                        <FontAwesomeIcon icon={['fas', 'trash-alt']} />
-                                    </Button>
-                                </div>
-                            </div>
-                        </Aux>
-                    );
-                })
-            );
+        let renderedChild = this.props.error ? <p>It appears that the jobs cannot be loaded!</p> : <Spinner />;;
+        if (this.props.loadedJobs) {
+            if (this.props.jobs.length > 0) {
+                renderedChild = (
+                    <div className="Jobs__wrap">
+                        {this.props.jobs.map((job, index) => {
+                            return (
+                                <Aux key={job.id}>
+                                    <div className="Jobs__edit">
+                                        <Job
+                                            id={job.id}
+                                            type={job.type}
+                                            title={job.title}
+                                            author={job.author}
+                                            availability={job.jobFields.job_availability}
+                                            verified={job.verified}
+                                            authorPhoto={job.authorPhoto}
+                                            tags={job.tags}
+                                        />
+                                        <div className="Job__employerButtons">
+                                            <Button clicked={() => this.editJobClickedHandler(index)} btnType="action -normal">
+                                                <FontAwesomeIcon icon={['fas', 'edit']} />
+                                            </Button>
+                                            <Button clicked={this.deleteHandler} btnType="action -delete">
+                                                <FontAwesomeIcon icon={['fas', 'trash-alt']} />
+                                            </Button>
+                                        </div>
+                                    </div>
+                                </Aux>
+                            );
+                        })}
+                    </div>
+                );
+            } else {
+                renderedChild =
+                    <div className="Jobs__wrap -missing">
+                        <h2 className="Jobs__heading"> You don't have any job posts yet. <span role="img" aria-label="no-recent-jobs">🔎</span></h2>
+                        <button className="Jobs__postBtn">Post A Job <FontAwesomeIcon icon="location-arrow" /></button>
+                    </div>
+            }
+
         }
 
         return (
@@ -70,16 +78,21 @@ class Jobs extends Component {
 
 const mapStateToProps = state => {
     return {
-        jobs: state.jobs.jobs,
-        loading: state.jobs.loading,
-        error: state.jobs.error,
+        //fetching
         userId: state.auth.userId,
+        userName: state.auth.userName,
+        loading: state.jobs.loadingJobs,
+        loadedJobs: state.jobs.loadedJobs,
+        //response data
+        jobs: state.jobs.jobs,
+        error: state.jobs.errorJobs,
+
     }
 }
 
 const mapDispatchToProps = dispatch => {
     return {
-        initFetchJobs: (userId) => dispatch(actions.fetchJobs(userId))
+        fetchJobsOnMount: (userId) => dispatch(actions.fetchJobs(userId)),
     }
 }
 
