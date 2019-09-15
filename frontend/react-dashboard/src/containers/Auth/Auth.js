@@ -86,7 +86,7 @@ export class Auth extends Component {
 
             content =
                 <Aux>
-                    <span role="img" aria-label="warning">️⚠️ You're in dev mode</span>
+                    <span role="img" aria-label="warning">️⚠️ {this.props.isDev}</span>
                     {
                         formElementsArray.map(formElement => (
                             <Input
