@@ -255,7 +255,7 @@ function rewrite_flush_on_activation()
     // Information needed for creating the plugin's pages
     $page_definitions = array(
         'dashboard'      => array(
-            'title'     => __('Employer Dashboard ReactJS', 'revolt-framework'),
+            'title'     => __('Dashboard', 'revolt-framework'),
             'content'   => '',
             'template'  => 'react-dashboard.php'
         ),
