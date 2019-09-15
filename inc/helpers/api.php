@@ -1,12 +1,13 @@
 <?php
 
-namespace Revolt_Framework\Inc\Helpers\API;
+namespace Revolt_Framework\Inc\Helpers;
 
 use WP_Error;
 
 if (!defined('ABSPATH')) {
     exit;
 }
+
 /**
  * Adds the taxonomy term NAMES to the job post
  */
@@ -53,7 +54,6 @@ function dynamic_register_term_fields($post_type, $taxonomy)
  * @link https://developer.wordpress.org/reference/functions/register_rest_field/
  */
 add_action('rest_api_init', __NAMESPACE__ . '\init_job_post_rest_fields');
-
 function init_job_post_rest_fields()
 {
 
@@ -79,8 +79,8 @@ function init_job_post_rest_fields()
             }
 
             //checks if user is a jobseeker
-            $roles = $user->roles;
-            if (!in_array('jobseeker', $roles)) {
+            $role = $user->roles[0];
+            if ($role !== 'jobseeker') {
                 return new WP_Error(
                     'rest_cannot_apply',
                     __('Sorry, you don\'t seem to be an approriate user'),
