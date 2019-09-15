@@ -5,13 +5,11 @@
 
     <?php if (count($attributes['errors']) > 0) :
         foreach ($attributes['errors'] as $error) : ?>
-            <p class="registration-error">
-                <?php echo esc_html($error); ?>
-            </p>
+            <p class="Registration__error"> <span role="img" aria-label="registration-error">⚠️</span><?php echo $error; ?></p>
     <?php endforeach;
     endif; ?>
 
-    <h2 class="Registration__title"><?php _e($attributes['title'], 'revolt-framework');  ?></h2>
+    <h2 class="Registration__heading"><?php _e($attributes['title'], 'revolt-framework');  ?></h2>
 
     <?php $nonce = wp_create_nonce('register_jobseeker_form_nonce'); ?>
     <form action="<?php echo esc_url(admin_url('admin-post.php')); ?>" method="post" autocomplete="off">
