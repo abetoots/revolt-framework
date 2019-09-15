@@ -1,7 +1,5 @@
 import * as actionTypes from './actionTypes';
-import axios from '../../axios-wp-dev-only';
-
-import { fetchProfile } from './index';
+import axios from '../../axios-instance';
 
 export const authenticationStart = () => {
     return {
@@ -19,10 +17,24 @@ export const authenticationSuccess = (tokenData, userIdData, userNameData, userR
     }
 }
 
+export const authenticationFailed = error => {
+    return {
+        type: actionTypes.AUTHENTICATION_FAILED,
+        error: error
+    }
+}
+
+export const authenticationFailedDev = environment => {
+    return {
+        type: actionTypes.AUTHENTICATION_FAILED_DEV,
+        environment: environment
+    }
+}
+
 export const logout = (token) => {
     //Revoke the token
     return dispatch => {
-        axios.post("/wp-json/simple-jwt-authentication/v1/token/revoke", {}, { headers: { "Authorization": "Bearer " + token } })
+        axios.post('/wp-json/simple-jwt-authentication/v1/token/revoke', {}, { headers: { "Authorization": "Bearer " + token } })
             .then(response => {
                 localStorage.removeItem('token');
                 localStorage.removeItem('expirationDate');
@@ -55,13 +67,6 @@ export const checkAuthTimeout = dateInSeconds => {
     }
 }
 
-export const authenticationFailed = error => {
-    return {
-        type: actionTypes.AUTHENTICATION_FAILED,
-        error: error
-    }
-}
-
 
 export const authenticateUser = (email, password) => {
     return dispatch => {
@@ -85,46 +90,77 @@ export const authenticateUser = (email, password) => {
                 localStorage.setItem('userRole', userRole);
                 dispatch(authenticationSuccess(token, userId, userName, userRole));
                 dispatch(checkAuthTimeout(response.data.token_expires));
-                dispatch(fetchProfile(userName));
             })
             .catch(err => {
                 console.log(err);
-                dispatch(authenticationFailed(err));
+                dispatch(authenticationFailedDev('webpack'));
             });
     }
 }
 
-export const checkAuthentication = () => {
+export const checkToken = () => {
     return dispatch => {
         const token = localStorage.getItem('token');
-        if (!token) {
-            return;
-        } else {
-            //validate token
-            axios.post('/wp-json/simple-jwt-authentication/v1/token/validate', '', {
-                headers: {
-                    'Authorization': 'Bearer ' + token
-                }
-            })
-                .then(response => {
-                    const expirationDate = new Date(localStorage.getItem('expirationDate'));
-                    if (expirationDate < new Date()) {
-                        return;
+        //DEV MODE
+        if (window.location.hostname === 'localhost') {
+            if (token) {
+                axios.post('/wp-json/simple-jwt-authentication/v1/token/validate', '', {
+                    headers: {
+                        'Authorization': 'Bearer ' + token
                     }
-                    const userId = localStorage.getItem('userId');
-                    const userName = localStorage.getItem('userName');
-                    const userRole = localStorage.getItem('userRole');
-                    dispatch(authenticationSuccess(token, userId, userName, userRole));
-                    //remaining seconds actually, converted to ms since checkAuthTimeout multiplies the param by 1000
-                    const remainingTime = (expirationDate.getTime() - new Date().getTime()) / 1000;
-                    dispatch(checkAuthTimeout(remainingTime));
-                    dispatch(fetchProfile(userName));
                 })
-                .catch(err => {
-                    //token is invalid
-                    return;
-                });
+                    .then(response => {
+                        const expirationDate = new Date(localStorage.getItem('expirationDate'));
+                        if (expirationDate < new Date()) {
+                            dispatch(authenticationFailed('Something\'s wrong. Try logging in again'));
+                        }
+                        const userId = localStorage.getItem('userId');
+                        const userName = localStorage.getItem('userName');
+                        const userRole = localStorage.getItem('userRole');
+                        dispatch(authenticationSuccess(token, userId, userName, userRole));
+                        //remaining seconds actually, converted to ms since checkAuthTimeout multiplies the param by 1000
+                        const remainingTime = (expirationDate.getTime() - new Date().getTime()) / 1000;
+                        dispatch(checkAuthTimeout(remainingTime));
+                    })
+                    .catch(err => {
+                        dispatch(authenticationFailedDev(err));
+                        dispatch(logout(token));
+                    });
+            } else {
+                //Webpack isolated app environment
+                dispatch(authenticationFailedDev('Token does not exist'));
+            }
+            //END DEV
 
+        } else {
+            //PRODUCTION
+            if (token) {
+                axios.post('/wp-json/simple-jwt-authentication/v1/token/validate', '', {
+                    headers: {
+                        'Authorization': 'Bearer ' + token
+                    }
+                })
+                    .then(response => {
+                        const expirationDate = new Date(localStorage.getItem('expirationDate'));
+                        if (expirationDate < new Date()) {
+                            dispatch(authenticationFailed('Something\'s wrong. Try logging in again'));
+                        }
+                        const userId = localStorage.getItem('userId');
+                        const userName = localStorage.getItem('userName');
+                        const userRole = localStorage.getItem('userRole');
+                        dispatch(authenticationSuccess(token, userId, userName, userRole));
+                        //remaining seconds actually, converted to ms since checkAuthTimeout multiplies the param by 1000
+                        const remainingTime = (expirationDate.getTime() - new Date().getTime()) / 1000;
+                        dispatch(checkAuthTimeout(remainingTime));
+                    })
+                    .catch(err => {
+                        dispatch(authenticationFailed('Something\'s wrong. Try logging in again'));
+                        dispatch(logout(token));
+                    });
+            } else {
+                dispatch(authenticationFailed('Something\'s wrong with our server.'));
+            }
+            //END PRODUCTION
         }
     }
 }

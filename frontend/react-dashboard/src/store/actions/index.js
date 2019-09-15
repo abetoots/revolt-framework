@@ -1,10 +1,13 @@
 export {
-    fetchJobs
+    fetchJobs,
+    fetchRecentJobs,
+    editJob,
+    countApplicants
 } from './jobs';
 
 export {
-    fetchJob
-} from './job';
+    fetchTaxonomies
+} from './taxonomies';
 
 export {
     fetchCandidates,
@@ -12,9 +15,9 @@ export {
 } from './candidates';
 
 export {
-    authenticateUser,
-    checkAuthentication,
-    logout
+    checkToken,
+    logout,
+    authenticateUser
 } from './auth';
 
 export {
