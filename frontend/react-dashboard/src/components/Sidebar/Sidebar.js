@@ -1,32 +1,39 @@
-import React from 'react';
-import './Sidebar.css';
+import React, { useState } from 'react';
+import './Sidebar.scss';
 
 import Aux from '../../hoc/Auxiliary';
+import MenuBurger from '../UI/MenuBurger/MenuBurger';
+import Backdrop from '../UI/Backdrop/Backdrop';
 import ProfileBanner from './ProfileBanner/ProfileBanner';
-import Nav from './Navigation/NavEmployer/Nav';
-import Logout from './Logout/Logout';
-const sidebar = (props) => {
-    let sidebar =
-        <Aux>
-            <ProfileBanner userName={props.userName} />
-            <Nav />
-            <Logout to="/logout" exact />
-        </Aux>
+import Nav from './Navigation/Navigation';
 
-    if (props.role === 'jobseeker') {
-        sidebar =
-            <Aux>
-                <ProfileBanner userName={props.userName} />
-                <Nav jobseeker />
-                <Logout to="/logout" exact />
-            </Aux>
+const Sidebar = (props) => {
+    const [showSidebar, setShowSidebar] = useState(false);
+
+    let sidebarClassNames = 'Sidebar'
+    if (showSidebar) {
+        sidebarClassNames = 'Sidebar -open'
     }
+
+    const toggleHandler = () => {
+        setShowSidebar(prevState => !prevState)
+    }
+
+    const closedHandler = () => {
+        setShowSidebar(false);
+    }
+
     return (
-        <section className="Sidebar">
-            {sidebar}
-        </section>
+        <Aux>
+            <Backdrop show={showSidebar} clicked={closedHandler} />
+            <MenuBurger sidebarShown={showSidebar} toggle={toggleHandler} />
+            <section className={sidebarClassNames}>
+                <ProfileBanner userName={props.userName} />
+                <Nav />
+            </section>
+        </Aux >
 
     );
 }
 
-export default sidebar;
+export default Sidebar;
