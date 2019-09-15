@@ -1,9 +1,66 @@
-@import '../../variables.scss';
+@import '../../partials/fluid';
 
 .Overview {
-    @include tablet-above {
+    $self: &;
+
+    &__counterContainer {
         display: grid;
-        grid-template-columns: 1fr 1fr;
-        grid-gap: 1rem;
+        gap: 15px;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    }
+
+    &__heading {
+        @include fluid-type(320px, 1200px, 30px, 45px);
+        margin-bottom: 15px;
+    }
+
+    &__recentJobs,
+    &__savedCands {
+        position: relative;
+        display: flex;
+        align-items: center;
+        min-height: 50vh;
+        margin: 15px 0;
+        padding: 10px;
+        background-color: white;
+        border-radius: 5px;
+
+        &.-missing {
+            background-position: center center;
+            background-repeat: no-repeat;
+            background-size: cover;
+            justify-content: flex-end;
+            background-color: hsla(0, 0%, 100%, 0.70);
+            background-blend-mode: overlay;
+            background-image: url('../../assets/missing2x.png');
+        }
+    }
+
+    &__recentJobsWrap,
+    &__savedCandsWrap {
+        text-align: right;
+    }
+
+    &__savedCands {
+        &.-missing {
+            background-image: url('../../assets/missing2@2x.png');
+        }
+    }
+
+    &__btn {
+        box-sizing: border-box;
+        cursor: pointer;
+        background-color: #ABFAA9;
+        border: 2px solid #ABFAA9;
+        color: black;
+        font-weight: 700;
+        padding: 10px;
+        margin-right: 15px;
+        border-radius: 5px;
+        @include fluid-type(320px, 1200px, 16px, 18px);
+
+        &:hover {
+            background-color: white;
+        }
     }
 }
