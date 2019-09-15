@@ -27,7 +27,6 @@ function enqueue_scripts_frontend()
 
 
 /**
- * TODO Don't forget to enable
  * When a new user is created, check if the new user is employer/jobseeker
  * If true, then update user meta to disable admin bar in front
  *
@@ -41,7 +40,7 @@ function update_new_user_meta($user_id)
     $role = $user_info->roles[0];
 
     if ($role === 'employer' || $role === 'jobseeker') {
-        // update_user_meta($user_id, 'show_admin_bar_front', 'false');
+        update_user_meta($user_id, 'show_admin_bar_front', 'false');
     }
     return $user_id;
 }
@@ -49,7 +48,6 @@ function update_new_user_meta($user_id)
 
 
 /**
- * TODO Remember to enable
  * Redirects users based on their role
  *
  * @uses wp_get_current_user()          Returns a WP_User object for the current user
@@ -61,18 +59,10 @@ function redirect_users_by_role()
 
     $current_user   = wp_get_current_user();
     if ($current_user->ID !== 0) {
-        $role_name      = $current_user->roles[0];
-
-        switch ($role_name) {
-            case 'employer':
-                //wp_redirect( home_url('employer') );
-                break;
-
-            case 'jobseeker':
-                // wp_redirect(home_url('job-seeker'));
-                break;
-            default:
-                return;
+        $role = $current_user->roles[0];
+        if ($role === 'employer' || $role === 'jobseeker') {
+            wp_redirect(home_url(), 403);
+            exit;
         }
     }
 }
