@@ -130,41 +130,22 @@ class Login
     }
 
     /**
-     * Redirect the user to the custom login page instead of wp-login.php. or wp-admin.php
+     * Redirect already logged in users trying to access wp-login.php
      */
     function redirect_already_logged_in()
     {
         if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             if (is_user_logged_in()) {
-                $this->redirect_logged_in_user();
+                $user = wp_get_current_user();
+                $role_name = $user->roles[0];
+                // if current user is employer
+                if ($role_name === 'employer' || $role_name === 'jobseeker') {
+                    wp_redirect(home_url(), 403);
+                } else {
+                    wp_redirect(admin_url());
+                }
                 exit;
             }
-        }
-    }
-
-    /**
-     * Redirects the user to the correct page depending on whether he / she
-     * is an employer/jobseeker.
-     *
-     * @param string $redirect_to   An optional redirect_to URL for admin users
-     */
-    private function redirect_logged_in_user($redirect_to = null)
-    {
-        $user = wp_get_current_user();
-        $role_name = $user->roles[0];
-        // if current user is employer
-        if ($role_name === 'employer') {
-            //if a request variable redirect_to is passed in, 
-            //if one is set, the user is directed to this URL instead.
-            if ($redirect_to !== '') {
-                wp_safe_redirect($redirect_to);
-            } else {
-                wp_redirect(home_url('employer'));
-            }
-        } else if ($role_name === 'jobseeker') { // if current user is jobseeker
-            wp_redirect(home_url('job-seeker'));
-        } else {
-            wp_redirect(admin_url());
         }
     }
 
@@ -207,6 +188,12 @@ class Login
 
                 wp_redirect($login_url); //Redirects to our custom login page even if errors are triggered
                 exit;
+            } elseif ($role_name === 'jobseeker' || $role_name === 'employer') {
+                return new WP_Error(
+                    'revolt-login-forbidden',
+                    __('Use the appropriate sign-in page', 'revolt-framework'),
+                    array('status' => 403)
+                );
             }
         }
 
