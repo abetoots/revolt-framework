@@ -134,6 +134,7 @@ class Login
      */
     function redirect_already_logged_in()
     {
+        //prevent users who are already logged in from accessing wp-login.php
         if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             if (is_user_logged_in()) {
                 $user = wp_get_current_user();
@@ -145,6 +146,21 @@ class Login
                     wp_redirect(admin_url());
                 }
                 exit;
+            }
+        } else if (isset($_POST['wp-submit'])) {
+            // prevent access to employers/jobseekers trying to login through wp-login.php
+            if ($_POST['wp-submit'] === "Log In") {
+                if (is_email($_POST['log'])) {
+                    $user = get_user_by('email', $_POST['log']);
+                } else {
+                    $user = get_user_by('login', $_POST['log']);
+                }
+
+                $role = $user->roles[0];
+                if ($role === 'jobseeker' || $role === 'employer') {
+                    wp_redirect(home_url(), 403);
+                    exit;
+                }
             }
         }
     }
@@ -188,12 +204,6 @@ class Login
 
                 wp_redirect($login_url); //Redirects to our custom login page even if errors are triggered
                 exit;
-            } elseif ($role_name === 'jobseeker' || $role_name === 'employer') {
-                return new WP_Error(
-                    'revolt-login-forbidden',
-                    __('Use the appropriate sign-in page', 'revolt-framework'),
-                    array('status' => 403)
-                );
             }
         }
 
