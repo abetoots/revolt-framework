@@ -29,6 +29,7 @@
                 })
                 .catch(err => {
                     console.log(err);
+                    $('.Login__submitBtn').attr('disabled', false).css('cursor', 'auto');
                 })
         })
     });
