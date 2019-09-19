@@ -12,7 +12,7 @@
     <?php endforeach;
     endif; ?>
 
-    <?php if ($attributes['new_user']) : ?>
+    <?php if (isset($attributes['new_user'])) : ?>
         <p class="Login__newUser"><?php _e('Registration successful! 🔑', 'revolt-framework'); ?></p>
     <?php endif; ?>
 
