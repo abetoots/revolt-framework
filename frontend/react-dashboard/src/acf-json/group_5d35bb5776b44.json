@@ -84,30 +84,6 @@
             "step": ""
         },
         {
-            "key": "field_5d4d18809819b",
-            "label": "Employer Photo",
-            "name": "revolt_emp_photo",
-            "type": "image",
-            "instructions": "",
-            "required": 0,
-            "conditional_logic": 0,
-            "wrapper": {
-                "width": "",
-                "class": "",
-                "id": ""
-            },
-            "return_format": "url",
-            "preview_size": "medium",
-            "library": "all",
-            "min_width": "",
-            "min_height": "",
-            "min_size": ".1",
-            "max_width": "",
-            "max_height": "",
-            "max_size": 2,
-            "mime_types": "jpg, jpeg, png"
-        },
-        {
             "key": "field_5d35bebfbe263",
             "label": "Team Size",
             "name": "revolt_emp_teamSize",
@@ -182,6 +158,30 @@
             "allow_null": 0,
             "multiple": 1,
             "return_format": "id"
+        },
+        {
+            "key": "field_5d4d18809819b",
+            "label": "Employer Photo",
+            "name": "revolt_emp_photo",
+            "type": "image",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "return_format": "url",
+            "preview_size": "medium",
+            "library": "all",
+            "min_width": "",
+            "min_height": "",
+            "min_size": "",
+            "max_width": "",
+            "max_height": "",
+            "max_size": 2,
+            "mime_types": "jpg, jpeg, png"
         }
     ],
     "location": [
@@ -206,5 +206,5 @@
     "hide_on_screen": "",
     "active": 1,
     "description": "",
-    "modified": 1568281962
+    "modified": 1569240877
 }
