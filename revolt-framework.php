@@ -27,7 +27,6 @@ define('REVOLT_FRAMEWORK_DIR', plugin_dir_path(__FILE__));
 define('REVOLT_FRAMEWORK_URL', plugin_dir_url(__FILE__));
 define('REVOLT_REACT_DIR', plugin_dir_path(__FILE__) . '/frontend/react-dashboard');
 define('REVOLT_REACT_URL', plugin_dir_url(__FILE__) . 'frontend/react-dashboard');
-define('REVOLT_REACT_BUILD_URL', REVOLT_REACT_URL . '/build');
 define('REVOLT_REACT_ASSET_MANIFEST', REVOLT_REACT_DIR . '/build/asset-manifest.json');
 
 

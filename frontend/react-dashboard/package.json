@@ -2,6 +2,7 @@
   "name": "react-dashboard",
   "version": "1.0.0",
   "private": true,
+  "homepage": "/wp-content/plugins/revolt-framework/frontend/react-dashboard/build",
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.22",
     "@fortawesome/free-regular-svg-icons": "^5.10.2",
