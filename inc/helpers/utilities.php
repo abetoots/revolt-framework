@@ -108,3 +108,29 @@ function add_post_state($post_states, $post)
 
     return $post_states;
 }
+
+
+/**
+ * This returns the key of the first field group that matches the rule passed into it
+ */
+
+function get_field_group_keys($rule)
+{
+    $acf_field_groups = acf_get_field_groups();
+    $keys = array();
+
+    foreach ($acf_field_groups as $field_group) {
+        // ! We can search by name but this will tend to break when user changes the field group title
+        // if ($field_group['title'] === 'JobSeeker Settings') {
+        //     $field_group = $field_group;
+        //     break;
+        // }
+        foreach ($field_group['location'] as $location) {
+            if ($location == $rule) {
+                $keys[] = $field_group['ID'];
+            }
+        }
+    };
+
+    return $keys;
+}
