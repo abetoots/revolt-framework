@@ -6,7 +6,12 @@
             event.preventDefault();
             let userName = $('#user_login').val();
             let pass = $('#user_pass').val();
-            fetch(`http://localhost/flerson/wp-json/simple-jwt-authentication/v1/token?username=${userName}&password=${pass}`, {
+
+            let url = `${window.location.origin}/wp-json/simple-jwt-authentication/v1/token`;
+            if (window.location.hostname === 'localhost') {
+                url = 'http://localhost/flerson/wp-json/simple-jwt-authentication/v1/token';
+            }
+            fetch(`${url}?username=${userName}&password=${pass}`, {
                 method: 'POST'
             })
                 .then(res => {
