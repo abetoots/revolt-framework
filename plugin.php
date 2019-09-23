@@ -79,6 +79,60 @@ class Plugin
         }
     }
 
+    /**
+     * widget_scripts
+     *
+     * Load required plugin core files.
+     *
+     * @since 1.2.0
+     * @access public
+     */
+    public function widget_scripts()
+    { }
+
+    /**
+     * widget_styles
+     *
+     * Load required plugin core files.
+     *
+     * @since 1.2.0
+     * @access public
+     */
+    public function widget_styles()
+    {
+        wp_enqueue_style('query-jobs', REVOLT_FRAMEWORK_URL . '/assets/css/query-jobs.css', array(), false, 'all');
+    }
+
+    /**
+     * Include Widgets files
+     *
+     * Load widgets files
+     *
+     * @since 1.2.0
+     * @access private
+     */
+    private function include_widgets_files()
+    {
+        require_once(REVOLT_FRAMEWORK_DIR . 'frontend/elementor-widgets/query_jobs.php');
+    }
+
+    /**
+     * Register Widgets
+     *
+     * Register new Elementor widgets.
+     *
+     * @since 1.2.0
+     * @access public
+     */
+    public function register_widgets()
+    {
+        // It's now safe to include Widgets files
+        $this->include_widgets_files();
+
+        // Register Widgets
+        \Elementor\Plugin::instance()->widgets_manager->register_widget_type(new FrontEnd\Elementor_Widgets\Query_Jobs());
+    }
+
 
     /**
      *  Plugin class constructor
@@ -92,6 +146,11 @@ class Plugin
     {
         $this->include_class_files();
         $this->include_libraries();
+        // Register widget scripts
+        add_action('elementor/frontend/after_register_scripts', array($this, 'widget_scripts'));
+        add_action('elementor/frontend/after_enqueue_styles', array($this, 'widget_styles'));
+        // Register widgets
+        add_action('elementor/widgets/widgets_registered', array($this, 'register_widgets'));
     }
 }
 
