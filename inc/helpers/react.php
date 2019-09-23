@@ -25,13 +25,13 @@ function enqueue_react_scripts()
 
             //enqueue our main css
             if (isset($asset_manifest['main.css'])) {
-                wp_enqueue_style('revolt-react-main-style', REVOLT_REACT_BUILD_URL . $asset_manifest['main.css']);
+                wp_enqueue_style('revolt-react-main-style', get_site_url() . $asset_manifest['main.css']);
             }
 
             //always enqueue our runtime and main js files
-            wp_enqueue_script('revolt-react-runtime', REVOLT_REACT_BUILD_URL . $asset_manifest['runtime~main.js'], array(), null, true);
+            wp_enqueue_script('revolt-react-runtime', get_site_url() . $asset_manifest['runtime-main.js'], array(), null, true);
 
-            wp_enqueue_script('revolt-react-main-script', REVOLT_REACT_BUILD_URL . $asset_manifest['main.js'], array('revolt-react-runtime'), null, true);
+            wp_enqueue_script('revolt-react-main-script', get_site_url() . $asset_manifest['main.js'], array('revolt-react-runtime'), null, true);
             wp_localize_script('revolt-react-main-script', 'revoltReact', array(
                 'nonce'     => wp_create_nonce('wp_rest'),
                 'user_id'      => get_current_user_id()
@@ -41,14 +41,14 @@ function enqueue_react_scripts()
                 if (preg_match('@static/js/(.*)\.chunk\.js@', $key, $matches)) {
                     if ($matches && is_array($matches) && count($matches) === 2) {
                         $name = "revolt-react-" . preg_replace('/[^A-Za-z0-9_]/', '-', $matches[1]);
-                        wp_enqueue_script($name, REVOLT_REACT_BUILD_URL . $value, array('revolt-react-main-script'), null, true);
+                        wp_enqueue_script($name, get_site_url() . $value, array('revolt-react-main-script'), null, true);
                     }
                 }
 
                 if (preg_match('@static/css/(.*)\.chunk\.css@', $key, $matches)) {
                     if ($matches && is_array($matches) && count($matches) == 2) {
                         $name = "revolt-react-" . preg_replace('/[^A-Za-z0-9_]/', '-', $matches[1]);
-                        wp_enqueue_style($name, REVOLT_REACT_BUILD_URL . $value, array('revolt-react-main-style'), null);
+                        wp_enqueue_style($name, get_site_url() . $value, array('revolt-react-main-style'), null);
                     }
                 }
             }
