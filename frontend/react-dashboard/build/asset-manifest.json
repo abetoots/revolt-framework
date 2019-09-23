@@ -1,18 +1,18 @@
 {
   "files": {
-    "main.css": "/static/css/main.bf12d82b.chunk.css",
-    "main.js": "/static/js/main.8f282031.chunk.js",
-    "main.js.map": "/static/js/main.8f282031.chunk.js.map",
-    "runtime-main.js": "/static/js/runtime-main.63a77efd.js",
-    "runtime-main.js.map": "/static/js/runtime-main.63a77efd.js.map",
-    "static/css/2.22841caa.chunk.css": "/static/css/2.22841caa.chunk.css",
-    "static/js/2.a2b7485e.chunk.js": "/static/js/2.a2b7485e.chunk.js",
-    "static/js/2.a2b7485e.chunk.js.map": "/static/js/2.a2b7485e.chunk.js.map",
-    "index.html": "/index.html",
-    "precache-manifest.a052b4d4c6e3a2f81d6e23bf79665a89.js": "/precache-manifest.a052b4d4c6e3a2f81d6e23bf79665a89.js",
-    "service-worker.js": "/service-worker.js",
-    "static/css/2.22841caa.chunk.css.map": "/static/css/2.22841caa.chunk.css.map",
-    "static/css/main.bf12d82b.chunk.css.map": "/static/css/main.bf12d82b.chunk.css.map",
-    "static/media/Overview.scss": "/static/media/missing2x.a8cd3d57.png"
+    "main.css": "/wp-content/plugins/revolt-framework/frontend/react-dashboard/build/static/css/main.05a9a9fd.chunk.css",
+    "main.js": "/wp-content/plugins/revolt-framework/frontend/react-dashboard/build/static/js/main.5239dcd2.chunk.js",
+    "main.js.map": "/wp-content/plugins/revolt-framework/frontend/react-dashboard/build/static/js/main.5239dcd2.chunk.js.map",
+    "runtime-main.js": "/wp-content/plugins/revolt-framework/frontend/react-dashboard/build/static/js/runtime-main.b29d8898.js",
+    "runtime-main.js.map": "/wp-content/plugins/revolt-framework/frontend/react-dashboard/build/static/js/runtime-main.b29d8898.js.map",
+    "static/css/2.22841caa.chunk.css": "/wp-content/plugins/revolt-framework/frontend/react-dashboard/build/static/css/2.22841caa.chunk.css",
+    "static/js/2.a2b7485e.chunk.js": "/wp-content/plugins/revolt-framework/frontend/react-dashboard/build/static/js/2.a2b7485e.chunk.js",
+    "static/js/2.a2b7485e.chunk.js.map": "/wp-content/plugins/revolt-framework/frontend/react-dashboard/build/static/js/2.a2b7485e.chunk.js.map",
+    "index.html": "/wp-content/plugins/revolt-framework/frontend/react-dashboard/build/index.html",
+    "precache-manifest.1c282e1c1ae6ac38f62c99b7490d2b47.js": "/wp-content/plugins/revolt-framework/frontend/react-dashboard/build/precache-manifest.1c282e1c1ae6ac38f62c99b7490d2b47.js",
+    "service-worker.js": "/wp-content/plugins/revolt-framework/frontend/react-dashboard/build/service-worker.js",
+    "static/css/2.22841caa.chunk.css.map": "/wp-content/plugins/revolt-framework/frontend/react-dashboard/build/static/css/2.22841caa.chunk.css.map",
+    "static/css/main.05a9a9fd.chunk.css.map": "/wp-content/plugins/revolt-framework/frontend/react-dashboard/build/static/css/main.05a9a9fd.chunk.css.map",
+    "static/media/Overview.scss": "/wp-content/plugins/revolt-framework/frontend/react-dashboard/build/static/media/missing2x.a8cd3d57.png"
   }
 }
