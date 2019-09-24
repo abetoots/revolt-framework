@@ -98,6 +98,7 @@ class Query_Jobs extends Widget_Base
             'pick_date',
             [
                 'label'         => __('Pick A Date', 'revolt-framework'),
+                'description'   => __('target specific if retrieve parameter is blank', 'revolt-framework'),
                 'type'          => Controls_Manager::DATE_TIME,
             ]
         );
@@ -108,13 +109,15 @@ class Query_Jobs extends Widget_Base
         $this->add_control(
             'date_retrieve_parameter',
             [
-                'label' => __('Retrieve all jobs:', 'revolt-framework'),
-                'type' => \Elementor\Controls_Manager::SELECT,
-                'options' => [
+                'label'         => __('Retrieve parameter:', 'revolt-framework'),
+                'description'   => __('Leave blank to target specific dates', 'revolt-framework'),
+                'type'          => \Elementor\Controls_Manager::SELECT,
+                'options'       => [
+                    ''              => '',
                     'before'    => __('Before', 'revolt-framework'),
-                    'after'    => __('After', 'revolt-framework'),
+                    'after'     => __('After', 'revolt-framework'),
                 ],
-                'default' => 'after',
+                'default' => '',
             ]
         );
 
@@ -125,13 +128,29 @@ class Query_Jobs extends Widget_Base
         $this->add_control(
             'is_inclusive',
             [
-                'label' => __('Inclusive?', 'plugin-domain'),
-                'description' => __('whether to return jobs/posts on the picked date as well'),
-                'type' => \Elementor\Controls_Manager::SWITCHER,
-                'label_on' => __('Show', 'your-plugin'),
-                'label_off' => __('Hide', 'your-plugin'),
-                'return_value' => 'yes',
-                'default' => 'yes',
+                'label'         => __('Inclusive?', 'revolt-framework'),
+                'description'   => __('whether to return jobs/posts on the picked date as well'),
+                'type'          => \Elementor\Controls_Manager::SWITCHER,
+                'return_value'  => 'yes',
+                'default'       => 'yes',
+            ]
+        );
+
+        /**
+         * @return string The chosen date/time in MySQL format (YYYY-mm-dd HH:ii)
+         */
+        $this->add_control(
+            'date_range_relative',
+            [
+                'label'         => __('Relative date ranges:', 'revolt-framework'),
+                'description'   => __('will override pick a date', 'revolt-framework'),
+                'type'          => \Elementor\Controls_Manager::SELECT,
+                'options'       => [
+                    ''              => '',
+                    'last_seven'    => __('Last 7 Days', 'revolt-framework'),
+                    'last_thirty'   => __('Last 30 Days', 'revolt-framework')
+                ],
+                'default' => '',
             ]
         );
 
@@ -141,16 +160,15 @@ class Query_Jobs extends Widget_Base
         $this->add_control(
             'date_range_specific',
             [
-                'label'         => __('Specific date ranges:', 'revolt-framework'),
-                'description'   => __('will override pick a date', 'revolt-framework'),
+                'label'         => __('Specific general dates:', 'revolt-framework'),
+                'description'   => __('will override pick a date and relative date ranges', 'revolt-framework'),
                 'type'          => \Elementor\Controls_Manager::SELECT,
                 'options'       => [
+                    ''              => '',
                     'today'         => __('Today', 'revolt-framework'),
                     'yesterday'     => __('Yesterday', 'revolt-framework'),
-                    'last_seven'    => __('Last 7 Days', 'revolt-framework'),
-                    'last_thirty'   => __('Last 30 Days', 'revolt-framework')
                 ],
-                'default' => 'after',
+                'default' => '',
             ]
         );
 
@@ -161,9 +179,9 @@ class Query_Jobs extends Widget_Base
         $this->add_control(
             'query_jobs_header',
             [
-                'label' => __('Heading', 'revolt-framework'),
-                'type' => \Elementor\Controls_Manager::TEXT,
-                'default' => __('Context', 'revolt-framework'),
+                'label'     => __('Heading', 'revolt-framework'),
+                'type'      => \Elementor\Controls_Manager::TEXT,
+                'default'   => __('Context', 'revolt-framework'),
             ]
         );
 
@@ -184,40 +202,63 @@ class Query_Jobs extends Widget_Base
     protected function render()
     {
         $settings = $this->get_settings_for_display();
-        $date = '';
+
+        //init query args
+        $args = array(
+            'post_type'  => 'revolt-job-post'
+        );
+        $date_time = '';
+        $date_to_query = '';
+
         //If user picked date, get the datetime, format to ISO
         if ($settings['pick_date']) {
-            $date = new DateTime($settings['pick_date']);
-            $date_in_ISO = $date->format('c');
+            $date_time = new DateTime($settings['pick_date']);
         }
 
-        //Override if specific range has been selected
-        if ($settings['date_range_specific']) {
-            switch ($settings['date_range_specific']) {
-                case 'today':
-                    $date = new DateTime('today');
-                    break;
-                case 'yesterday':
-                    $date = new DateTime('yesterday');
-                    break;
+        //If user picked relative dates
+        if ($settings['date_range_relative']) {
+            switch ($settings['date_range_relative']) {
                 case 'last_seven':
-                    $date = new DateTime('7 days ago');
+                    $date_time = new DateTime('7 days ago');
                     break;
+
                 case 'last_thirty':
-                    $date = new DateTime('30 days ago');
+                    $date_time = new DateTime('30 days ago');
                     break;
+
                 default:
-                    $date = new DateTime('yesterday');
+                    return;
             }
-            $date_in_ISO = $date->format('c');
         }
 
-        $args = array(
-            'post_type'  => 'revolt-job-post',
-            'date_query' => array(
-                $settings['date_retrieve_parameter']  => $date_in_ISO
-            )
-        );
+        // If user picked specific dates
+        if ($settings['date_range_specific']) {
+            $date_time = new DateTime($settings['date_range_specific']);
+        }
+
+        //set our date to query in args, check if retrieve parameter 'before/after' isset
+        if ($settings['date_retrieve_parameter']) {
+            //Get the date to query in ISO format
+            $date_to_query = $date_time->format('c');
+            $args['date_query'] = array(
+                $settings['date_retrieve_parameter']  => $date_to_query
+            );
+        } else {
+            //if not, then target the specific date
+            //check if date_time var has been set
+            if (is_object($date_time)) {
+                $date_info = getdate(date_timestamp_get($date_time));
+                $date_to_query = array(
+                    'year'      => $date_info['year'],
+                    'month'     => $date_info['mon'],
+                    'day'       => $date_info['mday']
+                );
+            }
+            $args['date_query'] = array($date_to_query);
+        }
+
+        //set args inclusive
+        $args['inclusive'] = $settings['is_inclusive'] ? true : false;
 
         $query = new WP_Query($args);
 
