@@ -21,6 +21,7 @@ function modify_acf_media_query($query)
     }
     return $query;
 }
+
 add_action('template_redirect', __NAMESPACE__ . '\defensive_redirects');
 function defensive_redirects($query)
 {
@@ -33,7 +34,14 @@ function defensive_redirects($query)
             exit;
         }
 
+        //for job board users only
         if (!current_user_can('read_revolt_job_post')) {
+            wp_redirect(home_url());
+            exit;
+        }
+
+        //for jobseekers only
+        if (current_user_can('publish_revolt_job_posts')) {
             wp_redirect(home_url());
             exit;
         }
