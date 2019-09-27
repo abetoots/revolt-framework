@@ -29,7 +29,7 @@ export class Overview extends Component {
 
         // Make sure profile settings have been loaded before fetching saved candidates
         // Also, dont fetch when profile is new since settings will be empty
-        if (this.props.loadedProfile && !this.props.userIsNew) {
+        if (this.props.loadedProfile && !this.props.userIsNew && !this.props.loadedSavedCands) {
             this.props.fetchSavedCandidatesOnMount(this.props.candidatesArray);
         }
     }
