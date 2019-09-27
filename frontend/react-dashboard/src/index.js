@@ -38,7 +38,7 @@ const rootReducer = combineReducers({
 
 //Handle resetting of state whenever user logs out
 const withLogoutHandlingReducer = (state, action) => {
-    if (action.type === 'AUTH_LOGOUT') {
+    if (action.type === 'AUTH_LOGOUT' || action.type === 'AUTH_LOGOUT_WITH_ERROR') {
         state = undefined
     }
     return rootReducer(state, action);
