@@ -21,7 +21,8 @@ export class Auth extends Component {
                 elementType: 'input',
                 elementConfig: {
                     type: 'email',
-                    placeholder: 'email@domain.com'
+                    placeholder: 'email@domain.com',
+                    autoComplete: 'on'
                 },
                 value: '',
                 validation: {
@@ -35,7 +36,8 @@ export class Auth extends Component {
                 elementType: 'input',
                 elementConfig: {
                     type: 'password',
-                    placeholder: 'Your Password'
+                    placeholder: 'Your Password',
+                    autoComplete: 'on'
                 },
                 value: '',
                 validation: {
@@ -66,7 +68,10 @@ export class Auth extends Component {
     }
 
     render() {
-        let content = <Spinner />;
+        let content = '';
+        if (this.props.authenticating || this.props.fetchingProfile) {
+            content = <Spinner />;
+        }
 
         let redirectIfAuth = null;
         if (this.props.valid && this.props.loadedProfile && !this.props.userIsNew) {
@@ -75,7 +80,7 @@ export class Auth extends Component {
         }
 
         //If we're in development, show a form to authenticate our user
-        if (this.props.isDev) {
+        if (this.props.devError) {
             const formElementsArray = [];
             for (let key in this.state.controls) {
                 formElementsArray.push({
@@ -86,27 +91,28 @@ export class Auth extends Component {
 
             content =
                 <Aux>
-                    <span role="img" aria-label="warning">️⚠️ {this.props.isDev}</span>
+                    <form onSubmit={this.submitHandler}>
+                        <h2><span role="img" aria-label="warning">️⚠️</span> {this.props.devError}</h2>;
                     {
-                        formElementsArray.map(formElement => (
-                            <Input
-                                key={formElement.id}
-                                elementType={formElement.config.elementType}
-                                elementConfig={formElement.config.elementConfig}
-                                value={formElement.config.value}
-                                invalid={!formElement.config.valid}
-                                shouldValidate={formElement.config.validation}
-                                touched={formElement.config.touched}
-                                changed={(event) => this.inputChangedHandler(event, formElement.id)} />
-                        ))
-                    }
-                    < Button btnType="blue" > LOG IN</Button>
+                            formElementsArray.map(formElement => (
+                                <Input
+                                    key={formElement.id}
+                                    elementType={formElement.config.elementType}
+                                    elementConfig={formElement.config.elementConfig}
+                                    value={formElement.config.value}
+                                    invalid={!formElement.config.valid}
+                                    shouldValidate={formElement.config.validation}
+                                    touched={formElement.config.touched}
+                                    changed={(event) => this.inputChangedHandler(event, formElement.id)} />
+                            ))
+                        }
+                        <Button btnType="blue" > LOG IN</Button>
+                    </form>
                 </Aux>;
         } else if (this.props.error) {
-            //Production error
-            content = <span role="img" aria-label="warning">️⚠️ {this.props.error}</span>;
+            content = <h2><span role="img" aria-label="warning">️⚠️</span> {this.props.error}</h2>;
         } else if (this.props.userIsNew) {
-            content = <span role="img" aria-label="warning">️⚠️ Please update your profile first</span>;
+            content = <h2><span role="img" aria-label="warning">️⚠️</span> Please update your profile first</h2>;
         }
 
         return (
@@ -123,7 +129,10 @@ export class Auth extends Component {
 const mapStateToProps = state => {
     return {
         valid: state.auth.valid,
-        isDev: state.auth.dev,
+        error: state.auth.error,
+        devError: state.auth.dev,
+        authenticating: state.auth.loading,
+        fetchingProfile: state.profile.loading,
         loadedProfile: state.profile.loaded,
         userIsNew: state.profile.isNew
     }
