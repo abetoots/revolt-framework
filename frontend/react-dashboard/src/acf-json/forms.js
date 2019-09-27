@@ -53,32 +53,38 @@ export const jobPostFormTaxonomies = updateSettingFields(JobPostTaxonomies, [['v
  * We call the function, pass in our fields(ACF JSON field group fields array)
  * The forEach loop runs, if it finds sub_fields at the 'job_salary' field, call itself and pass the 'job_salary' in the 3rd param
  * Now on the sub_fields forEach loop, we can extract our data from the 2nd param like so:
- * get(jobPostData.jobFields, ['job_salary']);
+ * get(fetchedJobFields, ['job_salary']);
  * 
  * If we find another nested sub_fields at 'range', on the forEach loop, it becomes like so:
- * get(jobPostData.jobFields, [''job_salary', 'range'])
+ * get(fetchedJobFields, [''job_salary', 'range'])
  * 
- * @param {Array} fields 
- * @param {Array} jobPostData 
- * @param {Array} path 
+ * @param {array} fields 
+ * @param {object} fetchedJobFields 
+ * @param {string} path 
  * @uses lodash.get https://lodash.com/docs/4.17.15#get
  */
-export const recursivelyUpdateFieldValues = (fields, jobPostData, path = '') => {
+export const recursivelyUpdateFieldValues = (fields, fetchedJobFields, path = '') => {
     fields.forEach(field => {
         if (field.sub_fields) {
             let pathName = `${path}[${field.name}]`;
-            return recursivelyUpdateFieldValues(field.sub_fields, jobPostData, pathName)
+            return recursivelyUpdateFieldValues(field.sub_fields, fetchedJobFields, pathName)
         } else {
             let pathName = `${path}[${field.name}]`;
-            field.value = get(jobPostData.jobFields, pathName);
+            field.value = get(fetchedJobFields, pathName);
         }
     });
     return fields;
 }
 
-export const updateTaxonomyValues = (fields, jobPostData) => {
+/**
+ * 
+ * @param {object} taxonomyFields 
+ * @param {*} fetchedJobFields 
+ */
+export const updateTaxonomyValues = (fields, fetchedJobFields) => {
+    //assumes that my taxonomy fields do not have sub fields
     fields.forEach(field => {
-        field.value = jobPostData.jobFields[field.name]
+        field.value = fetchedJobFields[field.name]
     })
     return fields;
 }
