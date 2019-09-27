@@ -24,10 +24,10 @@ export const authenticationFailed = error => {
     }
 }
 
-export const authenticationFailedDev = environment => {
+export const authenticationFailedDev = error => {
     return {
         type: actionTypes.AUTHENTICATION_FAILED_DEV,
-        environment: environment
+        error: error
     }
 }
 
@@ -42,7 +42,8 @@ export const logout = (token) => {
                 localStorage.removeItem('userName');
                 localStorage.removeItem('userRole');
                 dispatch({
-                    type: actionTypes.AUTH_LOGOUT
+                    type: actionTypes.AUTH_LOGOUT,
+                    error: 'Please log in again'
                 });
             })
             .catch(err => {
@@ -53,17 +54,18 @@ export const logout = (token) => {
                 localStorage.removeItem('userRole');
                 dispatch({
                     type: actionTypes.AUTH_LOGOUT_WITH_ERROR,
-                    error: err
+                    error: `Error: ${err}. Please log in again`
                 });
             })
     }
 }
 
-export const checkAuthTimeout = dateInSeconds => {
+export const checkTokenTimeout = (seconds, token) => {
+    console.log(seconds);
     return dispatch => {
         setTimeout(() => {
-            dispatch(logout());
-        }, dateInSeconds * 1000)
+            dispatch(logout(token));
+        }, seconds)
     }
 }
 
@@ -77,6 +79,7 @@ export const authenticateUser = (email, password) => {
         }
         axios.post('/wp-json/simple-jwt-authentication/v1/token', authData)
             .then(response => {
+                console.log(response.data);
                 //default by simple jwt authentication is 7 days
                 const expirationDate = new Date(response.data.token_expires * 1000);
                 const token = response.data.token;
@@ -89,17 +92,18 @@ export const authenticateUser = (email, password) => {
                 localStorage.setItem('userName', userName);
                 localStorage.setItem('userRole', userRole);
                 dispatch(authenticationSuccess(token, userId, userName, userRole));
-                dispatch(checkAuthTimeout(response.data.token_expires));
+                dispatch(checkTokenTimeout((response.data.token_expires * 1000 - new Date().getTime()) / 1000, token));
             })
             .catch(err => {
                 console.log(err);
-                dispatch(authenticationFailedDev('webpack'));
+                dispatch(authenticationFailedDev('Authentication Failed -dev'));
             });
     }
 }
 
 export const checkToken = () => {
     return dispatch => {
+        dispatch(authenticationStart());
         const token = localStorage.getItem('token');
         //DEV MODE
         if (window.location.hostname === 'localhost') {
@@ -118,9 +122,9 @@ export const checkToken = () => {
                         const userName = localStorage.getItem('userName');
                         const userRole = localStorage.getItem('userRole');
                         dispatch(authenticationSuccess(token, userId, userName, userRole));
-                        //remaining seconds actually, converted to ms since checkAuthTimeout multiplies the param by 1000
+                        //remaining seconds actually, converted to ms since checkTokenTimeout multiplies the param by 1000
                         const remainingTime = (expirationDate.getTime() - new Date().getTime()) / 1000;
-                        dispatch(checkAuthTimeout(remainingTime));
+                        dispatch(checkTokenTimeout(remainingTime, token));
                     })
                     .catch(err => {
                         dispatch(authenticationFailedDev(err));
@@ -128,7 +132,7 @@ export const checkToken = () => {
                     });
             } else {
                 //Webpack isolated app environment
-                dispatch(authenticationFailedDev('Token does not exist'));
+                dispatch(authenticationFailedDev('Dev mode'));
             }
             //END DEV
 
@@ -149,16 +153,16 @@ export const checkToken = () => {
                         const userName = localStorage.getItem('userName');
                         const userRole = localStorage.getItem('userRole');
                         dispatch(authenticationSuccess(token, userId, userName, userRole));
-                        //remaining seconds actually, converted to ms since checkAuthTimeout multiplies the param by 1000
+                        //remaining seconds actually, converted to ms since checkTokenTimeout multiplies the param by 1000
                         const remainingTime = (expirationDate.getTime() - new Date().getTime()) / 1000;
-                        dispatch(checkAuthTimeout(remainingTime));
+                        dispatch(checkTokenTimeout(remainingTime, token));
                     })
                     .catch(err => {
                         dispatch(authenticationFailed('Something\'s wrong. Try logging in again'));
                         dispatch(logout(token));
                     });
             } else {
-                dispatch(authenticationFailed('Something\'s wrong with our server.'));
+                dispatch(authenticationFailed('Something\'s wrong with our server. Please wait while we fix it'));
             }
             //END PRODUCTION
         }

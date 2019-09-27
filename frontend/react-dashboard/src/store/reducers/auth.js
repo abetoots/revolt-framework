@@ -44,7 +44,7 @@ const authenticationFailedDev = (state, action) => {
         userRole: '',
         loading: false,
         valid: false,
-        dev: action.environment
+        dev: action.error
     });
 }
 
@@ -53,7 +53,8 @@ const authLogout = (state, action) => {
         token: '',
         userId: '',
         userName: '',
-        userRole: ''
+        userRole: '',
+        error: action.error
     });
 }
 const authLogoutWithError = (state, action) => {
