@@ -17,8 +17,9 @@ import Auth from './containers/Auth/Auth';
 import Overview from './containers/Overview/Overview';
 import Candidates from './containers/Candidates/Candidates';
 import PageDisplay from './containers/PageDisplay/PageDisplay';
-import Jobs from "./containers/Jobs/Jobs";
-import EditJob from "./containers/EditJob/EditJob";
+import Jobs from './containers/Jobs/Jobs';
+import EditJob from './containers/EditJob/EditJob';
+import PostJob from './containers/PostJob/PostJob';
 import Logout from './containers/Logout/Logout';
 
 export class App extends Component {
@@ -53,6 +54,7 @@ export class App extends Component {
                             <Route path="/dashboard/hire" exact component={Candidates} />
                             <Route path="/dashboard/jobs" exact component={Jobs} />
                             <Route path="/dashboard/jobs/edit/:jobIndex" exact component={EditJob} />
+                            <Route path="/dashboard/jobs/new" exact component={PostJob} />
                             <Route path="/dashboard/logout" exact component={Logout} />
                             <Redirect to="/dashboard/overview" />
                         </Switch>
