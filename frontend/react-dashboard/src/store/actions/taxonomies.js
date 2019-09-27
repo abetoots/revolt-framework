@@ -35,9 +35,11 @@ export const fetchTaxonomies = () => {
                     return response.map(res => res.data);
                 })
             /**
-             * Expected: Hash table with {taxonomy_name: array containing objects}
+             * Returns an object containing arrays that are mapped to return only the id, name, slug, and taxonomy
+             * Example:
              * @returns {
-             * job_categories : [{id: value, name: value, slug}: value]
+             * job_categories : [{id: value, name: value, slug: value, taxonomy: 'job_categories'}],
+             * employment_types: [{id: value, name: value, slug: value, taxonomy: 'employment_types'}]
              * }
              */
             const finalObj = {};
