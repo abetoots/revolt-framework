@@ -52,16 +52,15 @@
         border-radius: 5px;
         padding: 10px;
         font-size: 1.3rem;
-        border: 2px solid #024570;
+        border: 2px solid #292C5D;
         font-weight: 600;
-        background-color: #024570;
+        background-color: #292C5D;
         color: white;
         transition: all .3s ease-in;
 
         &:hover {
-            background-color: white;
-            color: #024570;
-
+            background-color: transparent;
+            color: #292C5D;
         }
     }
 }

@@ -6,7 +6,7 @@ import * as actions from '../../store/actions/index';
 
 //UI
 import FroalaEditor from 'react-froala-wysiwyg';
-import Input from '../../components/UI/Input/Input';
+import ACFInput from '../../components/UI/ACFInput/ACFInput';
 import Spinner from '../../components/UI/Spinner/Spinner';
 
 //Froala Editor
@@ -45,17 +45,15 @@ class EditJob extends Component {
         // create a deep clone, loop over fields, set each field value according to it's fetched value
         // Basic Info
         const clonedBasicForm = cloneDeep(jobPostFormBasic);
-        const updatedBasicFields = updateValuesRecursive(clonedBasicForm.fields, this.props.job);
+        const updatedBasicFields = updateValuesRecursive(clonedBasicForm.fields, this.props.job.jobFields);
         clonedBasicForm.fields = updatedBasicFields;
-        // // Taxonomies 
+        // Taxonomies 
         const clonedTaxonomiesForm = cloneDeep(jobPostFormTaxonomies);
-        const updatedTaxonomyFields = updateTaxonomyValues(clonedTaxonomiesForm.fields, this.props.job);
+        const updatedTaxonomyFields = updateTaxonomyValues(clonedTaxonomiesForm.fields, this.props.job.jobFields);
         clonedTaxonomiesForm.fields = updatedTaxonomyFields;
         this.setState({ jobPostBasicInfoForm: clonedBasicForm, jobPostTaxonomiesForm: clonedTaxonomiesForm });
     }
 
-    componentDidUpdate(prevProps, prevState) {
-    }
 
     handleModelChange = (model) => {
         this.setState({ model: model });
@@ -65,9 +63,11 @@ class EditJob extends Component {
         event.preventDefault();
         const basicInfoData = buildFormData(this.state.jobPostBasicInfoForm.fields);
         const taxonomiesData = buildFormData(this.state.jobPostTaxonomiesForm.fields);
-        const formData = {};
-        formData['content'] = this.state.model;
-        formData['job_acf_fields'] = Object.assign(basicInfoData, taxonomiesData)
+        const formData = {
+            content: this.state.model,
+            //set job_acf_fields as combined basicinfo and taxonomies obj
+            job_acf_fields: Object.assign(basicInfoData, taxonomiesData)
+        };
 
         this.props.onEditJob(formData, this.props.job.id, this.props.token, this.props.match.params.jobIndex);
     }
@@ -91,9 +91,16 @@ class EditJob extends Component {
             case ('taxonomy'):
                 switch (event.target.name) {
                     case ('job_categories'):
-                        event.target.checked ?
-                            clonedField.value.push(+event.target.value) :
+                        // ! event target value should be converted back to number, hence the "+"
+                        if (event.target.checked) {
+                            if (!Array.isArray(clonedField.value)) {
+                                clonedField.value = [];
+                            }
+                            clonedField.value.push(+event.target.value);
+                        } else {
                             clonedField.value = clonedField.value.filter(val => val !== +event.target.value);
+                        }
+
                         break;
                     case ('employment_types'):
                         clonedField.value = +event.target.value;
@@ -115,20 +122,20 @@ class EditJob extends Component {
     }
 
     /**
-     * A recursive function made for mapping the ACF json structure to <Input/> Components
+     * A recursive function made for mapping the ACF json structure to <ACFInput/> Components
      * We pass in our fields array, and if it finds sub_fields, will call itself 
      * @param {Array} fields 
      * @param {String} path
      * @param {String} parentForm
      */
-    mapInputs(fields, path = '', parentForm, fieldType = '', excludedFieldName = '') {
+    mapInputs(fields, path = '', parentForm, excludedFieldName = '') {
         const returnThis = fields.map((field, index) => {
             if (field.name === excludedFieldName) {
                 return '';
             }
             let inputField =
                 //ACF input
-                <Input
+                <ACFInput
                     key={field.key}
                     label={field.label}
                     name={field.name}
@@ -167,7 +174,7 @@ class EditJob extends Component {
     }
 
     render() {
-        let rendered = this.props.error ? <p>Edit Job Form could not be loaded</p> : <Spinner />;
+        let rendered = this.props.errorTax ? <p>Edit Job Form could not be loaded</p> : <Spinner />;
         let updateStatus = '';
         let editJobStatusClasses = ['EditJob__status'];
         if (this.props.editSuccess) {
@@ -189,7 +196,7 @@ class EditJob extends Component {
                         <h2 className="EditJob__heading">Content</h2>
                         <FroalaEditor
                             model={this.state.model}
-                            changed={this.handleModelChange}
+                            onModelChange={this.handleModelChange}
                             config={{
                                 imageUpload: false
                             }}
@@ -209,11 +216,11 @@ class EditJob extends Component {
                     </div>
                     <div className="EditJob__fields">
                         {
-                            formTaxonomies.map(el => {
+                            formTaxonomies.map(form2El => {
                                 return (
-                                    <Aux key={el.key}>
-                                        <h2 className="EditJob__heading">{el.title}</h2>
-                                        {this.mapInputs(el.fields, '', 'jobPostTaxonomiesForm', '', 'the_premium_package')}
+                                    <Aux key={form2El.key}>
+                                        <h2 className="EditJob__heading">{form2El.title}</h2>
+                                        {this.mapInputs(form2El.fields, '', 'jobPostTaxonomiesForm', 'the_premium_package')}
                                     </Aux>
                                 );
                             })
@@ -242,7 +249,7 @@ const mapStateToProps = (state, ownProps) => {
         job: state.jobs.jobs[ownProps.match.params.jobIndex],
         taxonomies: state.taxonomies.taxonomies,
         loading: state.taxonomies.loading,
-        error: state.taxonomies.error,
+        errorTax: state.taxonomies.error,
         fetchedTaxonomies: state.taxonomies.fetched,
         //submit
         token: state.auth.token,
