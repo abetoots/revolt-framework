@@ -205,7 +205,8 @@ class Query_Jobs extends Widget_Base
 
         //init query args
         $args = array(
-            'post_type'  => 'revolt-job-post'
+            'post_type'     => 'revolt-job-post',
+            'post_status'   => 'publish'
         );
         $date_time = '';
         $date_to_query = '';
