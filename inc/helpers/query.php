@@ -26,8 +26,7 @@ add_action('template_redirect', __NAMESPACE__ . '\defensive_redirects');
 function defensive_redirects($query)
 {
 
-    if (is_page('edit') || is_page('profile')) {
-
+    if (is_page('edit')) {
 
         if (!is_user_logged_in()) {
             wp_redirect(home_url());
@@ -36,6 +35,19 @@ function defensive_redirects($query)
 
         //for job board users only
         if (!current_user_can('read_revolt_job_post')) {
+            wp_redirect(home_url());
+            exit;
+        }
+    }
+
+    if (is_page('profile')) {
+        //for job board users only
+        if (!current_user_can('read_revolt_job_post')) {
+            wp_redirect(home_url());
+            exit;
+        }
+
+        if (!is_user_logged_in()) {
             wp_redirect(home_url());
             exit;
         }
