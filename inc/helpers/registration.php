@@ -209,7 +209,7 @@ function verify_recaptcha()
         'https://www.google.com/recaptcha/api/siteverify',
         array(
             'body' => array(
-                'secret' => get_option('personalize-login-recaptcha-secret-key'),
+                'secret' => get_option('revolt-recaptcha-secret-key'),
                 'response' => $captcha_response
             )
         )
