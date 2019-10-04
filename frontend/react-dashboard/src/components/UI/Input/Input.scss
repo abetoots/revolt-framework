@@ -20,16 +20,14 @@
         box-sizing: border-box;
 
         &:focus {
-            outline: -webkit-focus-ring-color auto 1px;
+            outline: none;
+            background-color: #ccc;
         }
+    }
 
-        &.-invalid {
-            &:focus {
-                outline: none;
-            }
-
-            border: 1px solid rgb(210, 0, 0);
-        }
+    &.-invalid {
+        border: 1px solid red;
+        background-color: #FDA49A;
     }
 
     &__ul {
