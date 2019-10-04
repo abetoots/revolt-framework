@@ -10,44 +10,46 @@ const Input = (props) => {
     }
 
     //switch case for normal inputs
-    switch (props.elementType) {
-        case ('input'):
-            inputElement = <input
-                className={inputClasses.join(' ')}
-                {...props.elementConfig}
-                value={props.value}
-                onChange={props.changed} />;
-            break;
-        case ('textarea'):
-            inputElement = <textarea
-                className={inputClasses.join(' ')}
-                {...props.elementConfig}
-                value={props.value}
-                onChange={props.changed} />;
-            break;
-        case ('select'):
-            inputElement =
-                <select
+    if (props.elementType) {
+        switch (props.elementType) {
+            case ('input'):
+                inputElement = <input
                     className={inputClasses.join(' ')}
+                    {...props.elementConfig}
                     value={props.value}
-                    onChange={props.changed}>
-                    {props.elementConfig.options.map(option => (
-                        <option
-                            key={option.value}
-                            value={option.value}>
-                            {option.displayValue}
-                        </option>
-                    ))}
-                </select>
-            break;
+                    onChange={props.changed} />;
+                break;
+            case ('textarea'):
+                inputElement = <textarea
+                    className={inputClasses.join(' ')}
+                    {...props.elementConfig}
+                    value={props.value}
+                    onChange={props.changed} />;
+                break;
+            case ('select'):
+                inputElement =
+                    <select
+                        className={inputClasses.join(' ')}
+                        value={props.value}
+                        onChange={props.changed}>
+                        {props.elementConfig.options.map(option => (
+                            <option
+                                key={option.value}
+                                value={option.value}>
+                                {option.displayValue}
+                            </option>
+                        ))}
+                    </select>
+                break;
 
-        default:
-            inputElement = <input
-                className={inputClasses.join(' ')}
-                {...props.elementConfig}
-                value={props.value}
-                onChange={props.changed} />;
-    }
+            default:
+                inputElement = <input
+                    className={inputClasses.join(' ')}
+                    {...props.elementConfig}
+                    value={props.value}
+                    onChange={props.changed} />;
+        }
+    } // end switch case for normal inputs
 
     return (
         <div className="Input">
