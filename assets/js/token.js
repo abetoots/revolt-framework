@@ -2,7 +2,8 @@
     $(document).ready(function () {
         $('#login-form').submit(function (event) {
             let form = this;
-            $('.Login__submitBtn').attr('disabled', true).css('cursor', 'wait');
+            $('.Login__submitBtn').attr('disabled', true);
+            $(document.body).css('cursor', 'wait');
             event.preventDefault();
             let userName = $('#user_login').val();
             let pass = $('#user_pass').val();
@@ -34,7 +35,8 @@
                 })
                 .catch(err => {
                     console.log(err);
-                    $('.Login__submitBtn').attr('disabled', false).css('cursor', 'auto');
+                    $('.Login__submitBtn').attr('disabled', false);
+                    $(document.body).css('cursor', 'auto');
                 })
         })
     });
