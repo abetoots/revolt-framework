@@ -115,7 +115,7 @@ class EditJob extends Component {
         //let our state know if the input has been touched
         clonedField.touched = true;
         //checkFieldValidity returns true/false
-        clonedField.valid = checkFieldValidity(event.target.value, clonedField);
+        clonedField.valid = checkFieldValidity(clonedField.value, clonedField);
         // replace clonedform's appropriate field with the cloned field
         setNested(clonedForm.fields, path, clonedField);
         this.setState({ [parentForm]: clonedForm });
@@ -143,8 +143,9 @@ class EditJob extends Component {
                     fieldType={field.field_type ? field.field_type : ''}
                     taxonomyOptions={this.props.taxonomies[field.taxonomy] ? this.props.taxonomies[field.taxonomy] : []}
                     defaultChoices={field.choices ? Object.entries(field.choices) : ''}
-                    value={field.value}
+                    value={field.default_value && !field.touched ? field.default_value : field.value}
                     valid={field.valid}
+                    required={field.required === 1 ? true : false}
                     shouldValidate={field.required === 1 ? true : false}
                     touched={field.touched}
                     changed={(event) => {
