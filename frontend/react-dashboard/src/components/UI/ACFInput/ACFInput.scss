@@ -1,4 +1,11 @@
+@import '../../../partials/fluid';
+
 .ACFInput {
+
+    $boxWidth: 30px;
+    $boxHeight: 30px;
+    $boxFont: 15px;
+
     width: 100%;
     padding: 10px;
     box-sizing: border-box;
@@ -20,18 +27,80 @@
         box-sizing: border-box;
 
         &:focus {
-            outline: none;
-            background-color: #ccc;
+            outline: -webkit-focus-ring-color auto 1px;
         }
-    }
 
-    &.-invalid {
-        border: 1px solid red;
-        background-color: #FDA49A;
+        &.-invalid {
+            &:focus {
+                outline: none;
+            }
+
+            border: 1px solid rgb(210, 0, 0);
+        }
     }
 
     &__ul {
         list-style: none;
-        padding: 0;
+        padding: 15px 0;
+    }
+
+    &__li {
+        &.-taxonomy {
+            @include fluid-type(320px, 1440px, 16px, 22px);
+        }
+    }
+
+    &__checkbox {
+        cursor: pointer;
+        position: relative;
+        appearance: none;
+        width: $boxWidth;
+        height: $boxHeight;
+        background: white;
+        border-radius: 5px;
+        border: 1.5px solid #ededed;
+        outline: none;
+        vertical-align: middle;
+        font-size: $boxFont;
+
+        &:checked {
+            background-color: rgb(164, 238, 164);
+
+            &::after {
+                content: '✔️';
+                position: absolute;
+                left: 50%;
+                margin-left: -$boxFont/1.5;
+                top: 50%;
+                margin-top: -$boxFont/1.5;
+                font-size: inherit;
+            }
+        }
+    }
+
+    &__radio {
+        cursor: pointer;
+        position: relative;
+        appearance: none;
+        width: $boxWidth;
+        height: $boxHeight;
+        background: white;
+        border-radius: 50%;
+        border: 1.5px solid #ededed;
+        outline: none;
+        vertical-align: middle;
+        font-size: $boxFont;
+
+        &:checked {
+            &::after {
+                content: '🔵';
+                position: absolute;
+                left: 50%;
+                margin-left: -$boxFont/1.5;
+                top: 50%;
+                margin-top: -$boxFont/1.5;
+                font-size: inherit;
+            }
+        }
     }
 }
