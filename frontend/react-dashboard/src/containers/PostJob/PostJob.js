@@ -7,7 +7,11 @@ import * as actions from '../../store/actions/index';
 //UI
 import FroalaEditor from 'react-froala-wysiwyg';
 import ACFInput from '../../components/UI/ACFInput/ACFInput';
+import Input from '../../components/UI/Input/Input';
 import Spinner from '../../components/UI/Spinner/Spinner';
+
+//Paypal
+import PaypalButton from '../../components/PaypalButton/PaypalButton';
 
 //Froala Editor
 // Require Editor JS files.
@@ -19,20 +23,42 @@ import 'froala-editor/css/froala_editor.pkgd.min.css';
 
 //Utility
 import Aux from '../../hoc/Auxiliary';
-import { checkFieldValidity } from '../../utility/utility';
+import { checkFieldValidity, checkInputValidity, updateObject } from '../../utility/utility';
 
 //Forms
 import { jobPostFormBasic, jobPostFormTaxonomies, buildFormData } from '../../acf-json/forms';
 
 import getNested from 'lodash.get';
 import setNested from 'lodash.set';
-import { isArray } from 'util';
 
 class PostJob extends Component {
+    constructor(props) {
+        super(props);
+        this.paypalRef = React.createRef();
+    }
+
     state = {
+        title: {
+            elementType: 'input',
+            label: 'Job Title',
+            elementConfig: {
+                type: 'text',
+                placeholder: 'Job Title',
+                required: true
+            },
+            value: '',
+            validation: {
+                required: true,
+                maxLength: 127
+            },
+            valid: false,
+            touched: false
+        },
         jobPostBasicInfoForm: jobPostFormBasic,
         jobPostTaxonomiesForm: jobPostFormTaxonomies,
         formIsValid: false,
+        jobPrice: 99,
+        paidFor: false,
         model: ''
     }
 
@@ -42,9 +68,15 @@ class PostJob extends Component {
         }
     }
 
+    //froala editor's two way binding handler
     handleModelChange = (model) => {
         console.log(model)
         this.setState({ model: model });
+    }
+
+    approvedPaymentHandler(order) {
+        console.log(order);
+        this.setState({ paidFor: true })
     }
 
     submitHandler(event) {
@@ -52,13 +84,33 @@ class PostJob extends Component {
         const basicInfoData = buildFormData(this.state.jobPostBasicInfoForm.fields);
         const taxonomiesData = buildFormData(this.state.jobPostTaxonomiesForm.fields);
         const formData = {
+            title: this.state.title.value,
             content: this.state.model,
             //set job_acf_fields as combined basicinfo and taxonomies obj
-            job_acf_fields: Object.assign(basicInfoData, taxonomiesData)
+            job_acf_fields: Object.assign(basicInfoData, taxonomiesData),
+            status: "publish"
         };
 
-        console.log(formData)
-        // this.props.onPostJob(formData, this.props.job.id, this.props.token, this.props.match.params.jobIndex);
+        console.log(formData);
+        this.props.onPostJob(formData, this.props.token);
+    }
+
+
+    titleChangedHandler = (event) => {
+
+        //clone our title obj, update properties
+        const clonedTitle = updateObject(this.state.title, {
+            value: event.target.value,
+            valid: checkInputValidity(event.target.value, this.state.title.validation),
+            touched: true
+        });
+
+        //TODO maybe loop over to check if form is valid
+        // let formIsValid = true;
+        // for (let inputIdentifier in updatedOrderForm) {
+        //     formIsValid = updatedOrderForm[inputIdentifier].valid && formIsValid;
+        // }
+        this.setState({ title: clonedTitle });
     }
 
     /**
@@ -109,7 +161,7 @@ class PostJob extends Component {
         //let our state know if the input has been touched
         clonedField.touched = true;
         //checkFieldValidity returns true/false
-        clonedField.valid = checkFieldValidity(event.target.value, clonedField);
+        clonedField.valid = checkFieldValidity(clonedField.value, clonedField);
         // replace clonedform's appropriate field with the cloned field
         setNested(clonedForm.fields, path, clonedField);
         this.setState({ [parentForm]: clonedForm });
@@ -138,9 +190,9 @@ class PostJob extends Component {
                     fieldType={field.field_type ? field.field_type : ''}
                     taxonomyOptions={this.props.taxonomies[field.taxonomy] ? this.props.taxonomies[field.taxonomy] : []}
                     defaultChoices={field.choices ? Object.entries(field.choices) : ''}
-                    value={field.value}
+                    value={field.default_value && !field.touched ? field.default_value : field.value}
                     valid={field.valid}
-                    shouldValidate={field.required === 1 ? true : false}
+                    required={field.required === 1 ? true : false}
                     touched={field.touched}
                     changed={(event) => {
                         //if path exists, append .sub_fields[index] to path
@@ -169,18 +221,12 @@ class PostJob extends Component {
     }
 
     render() {
+        //Payment status that appears on top
+        let paymentStatus = '';
+        const paymentStatusClasses = ['PostJob__paymentStatus'];
+
+        //Form to be rendered
         let rendered = this.props.errorTax ? <p>Job Form could not be loaded</p> : <Spinner />;
-        let updateStatus = '';
-        let editJobStatusClasses = ['PostJob__status'];
-        if (this.props.editSuccess) {
-            editJobStatusClasses.push('-success');
-            updateStatus =
-                <div>Updated! <span role="img" aria-label="update-success">✅</span></div>
-        } else if (this.props.editError) {
-            editJobStatusClasses.push('-failed');
-            updateStatus =
-                <div>Something went wrong! <span role="img" aria-label="update-failed">❌</span></div>
-        }
         if (!this.props.loading) {
             //! jsx should be in array
             const formBasicInfo = [this.state.jobPostBasicInfoForm];
@@ -188,6 +234,16 @@ class PostJob extends Component {
             rendered =
                 <form onSubmit={(event) => this.submitHandler(event)} className="PostJob__form">
                     <div className="PostJob__jobContent">
+                        <h2 className="PostJob__heading">Job Position/Title</h2>
+                        <Input
+                            value={this.state.title.value}
+                            elementType={this.state.title.elementType}
+                            valid={this.state.title.valid}
+                            shouldValidate={this.state.title.validation}
+                            touched={this.state.title.touched}
+                            elementConfig={this.state.title.elementConfig}
+                            changed={(event) => this.titleChangedHandler(event)}
+                        />
                         <h2 className="PostJob__heading">Content</h2>
                         <FroalaEditor
                             model={this.state.model}
@@ -202,8 +258,7 @@ class PostJob extends Component {
                             formBasicInfo.map(formEl => {
                                 return (
                                     <Aux key={formEl.key}>
-                                        <h2 className="PostJob__heading">{formEl.title}</h2>
-                                        {this.mapInputs(formEl.fields, '', 'jobPostBasicInfoForm')}
+                                        {this.mapInputs(formEl.fields, '', 'jobPostBasicInfoForm', '')}
                                     </Aux>
                                 );
                             })
@@ -214,26 +269,30 @@ class PostJob extends Component {
                             formTaxonomies.map(form2El => {
                                 return (
                                     <Aux key={form2El.key}>
-                                        <h2 className="PostJob__heading">{form2El.title}</h2>
-                                        {this.mapInputs(form2El.fields, '', 'jobPostTaxonomiesForm', 'the_premium_package')}
+                                        {this.mapInputs(form2El.fields, '', 'jobPostTaxonomiesForm', '')}
                                     </Aux>
                                 );
                             })
                         }
                     </div>
                     <div className="PostJob__btnContainer">
-                        {/* //TODO thispropsediting */}
-                        <button className="PostJob__submitBtn" style={{ cursor: this.props.editing ? 'wait' : '' }} type="submit">Post Your Job</button>
+                        <button className="PostJob__submitBtn" style={{ cursor: this.props.posting ? 'wait' : '' }} type="submit">Post Your Job</button>
                     </div>
                 </form >;
         };
 
         return (
             <div className="PostJob" >
-                <div className={editJobStatusClasses.join(' ')}>
-                    {updateStatus}
+                <div className={paymentStatusClasses.join(' ')} >
+                    {paymentStatus}
                 </div>
                 {rendered}
+                <PaypalButton
+                    title={this.state.title.value}
+                    productPrice={this.state.jobPrice}
+                    approved={(order) => this.approvedPaymentHandler(order)}
+                    loading={this.props.loading}
+                />
             </div>
         );
     }
@@ -254,7 +313,7 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = dispatch => {
     return {
         fetchTaxonomiesOnMount: () => dispatch(actions.fetchTaxonomies()),
-        // onPostJob: (formData, jobId, token, jobIndex) => dispatch(actions.postJob(formData, jobId, token, jobIndex))
+        onPostJob: (formData, token) => dispatch(actions.postJob(formData, token))
     }
 }
 
