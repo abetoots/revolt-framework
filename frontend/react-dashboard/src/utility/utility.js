@@ -7,7 +7,6 @@ export const updateObject = (oldState, newProperties) => {
 
 export const checkFieldValidity = (value, field) => {
     let isValid = true;
-    // console.log(isValid);
     if (field.required === 1) {
         isValid = value !== '' && isValid;
     }
@@ -31,17 +30,25 @@ export const checkFieldValidity = (value, field) => {
             isValid = regex.test(value) === true && isValid;
             break;
 
+        case ('taxonomy'):
+            if (field.field_type === 'checkbox') {
+                isValid = Array.isArray(value) && value.length !== 0 && isValid;
+            } else {
+                isValid = value !== '' && isValid;
+            }
+            break;
+
         default:
             return isValid;
 
     }
 
     if (field.min) {
-        isValid = value.length >= field.min && isValid;
+        isValid = value >= field.min && isValid;
     }
 
     if (field.max) {
-        isValid = value.length <= field.max && isValid;
+        isValid = value <= field.max && isValid;
     }
 
     if (field.twitterValidate) {
