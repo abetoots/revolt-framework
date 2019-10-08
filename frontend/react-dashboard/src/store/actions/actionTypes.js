@@ -5,6 +5,9 @@ export const FETCH_JOBS_FAILED = 'FETCH_JOBS_FAILED';
 export const EDIT_JOB_START = 'EDIT_JOB_START';
 export const EDIT_JOB_SUCCESS = 'EDIT_JOB_SUCCESS';
 export const EDIT_JOB_FAILED = 'EDIT_JOB_FAILED';
+export const POST_JOB_START = 'POST_JOB_START';
+export const POST_JOB_SUCCESS = 'POST_JOB_SUCCESS';
+export const POST_JOB_FAILED = 'POST_JOB_FAILED';
 
 
 //Recent Jobs
