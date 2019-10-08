@@ -105,15 +105,67 @@ class Category_Icons extends Widget_Base
                 'tab'       => Controls_Manager::TAB_STYLE
             ]
         );
+
+        $this->add_control(
+            'width',
+            [
+                'label' => __('Width', 'revolt-framework'),
+                'type' => Controls_Manager::SLIDER,
+                'size_units' => ['px', '%'],
+                'range' => [
+                    'px' => [
+                        'min' => 0,
+                        'max' => 1000,
+                        'step' => 5,
+                    ],
+                    '%' => [
+                        'min' => 0,
+                        'max' => 100,
+                    ],
+                ],
+                'default' => [
+                    'unit' => 'px',
+                    'size' => 75,
+                ],
+                'selectors' => [
+                    '.CategoryIcons__slot' => 'width: {{SIZE}}{{UNIT}};',
+                ],
+            ]
+        );
+
         $this->add_control(
             'text_color',
             [
-                'label'     => __('Color', 'plugin-domain'),
+                'label'     => __('Color', 'revolt-framework'),
                 'type'      => Controls_Manager::COLOR,
                 'default'   => '#000',
                 'selectors' => [
-                    '{{WRAPPER}} .CategoryIcons__category' => 'color: {{VALUE}}',
+                    '.CategoryIcons__category' => 'color: {{VALUE}}',
                 ],
+            ]
+        );
+
+        $this->add_control(
+            'text_align',
+            [
+                'label'         => __('Alignment', 'revolt-framework'),
+                'type'          => \Elementor\Controls_Manager::CHOOSE,
+                'options'       => [
+                    'left' => [
+                        'title'     => __('Left', 'revolt-framework'),
+                        'icon'      => 'fa fa-align-left',
+                    ],
+                    'center' => [
+                        'title'         => __('Center', 'revolt-framework'),
+                        'icon'      => 'fa fa-align-center',
+                    ],
+                    'right' => [
+                        'title'     => __('Right', 'revolt-framework'),
+                        'icon'      => 'fa fa-align-right',
+                    ],
+                ],
+                'default'       => 'center',
+                'toggle'        => true,
             ]
         );
 
@@ -123,7 +175,7 @@ class Category_Icons extends Widget_Base
                 'name'      => 'background',
                 'label'     => __('Background', 'revolt-framework'),
                 'types' => ['classic', 'gradient'],
-                'selector' => '{{WRAPPER}} .CategoryIcons__slot'
+                'selector' => '.CategoryIcons__slot'
             ]
         );
 
@@ -133,7 +185,7 @@ class Category_Icons extends Widget_Base
                 'name'      => 'text_typography',
                 'label'     => __('Typography', 'revolt-framework'),
                 'scheme' => Scheme_Typography::TYPOGRAPHY_1,
-                'selector'  => '{{WRAPPER}} .CategoryIcons__category'
+                'selector'  => '.CategoryIcons__category'
             ]
         );
 
@@ -204,8 +256,19 @@ class Category_Icons extends Widget_Base
     protected function render()
     {
         $settings = $this->get_settings_for_display();
+
+        $this->add_render_attribute(
+            'wrapper',
+            [
+                'class'     => "CategoryIcons",
+                'style'     => [
+                    "justify-content: " . $settings['text_align'] . "",
+                ]
+            ]
+        );
+
         ?>
-        <div class="CategoryIcons">
+        <div <?php echo $this->get_render_attribute_string('wrapper'); ?>>
             <?php
                     if ($settings['categories_list']) :
                         foreach ($settings['categories_list'] as $item) :
