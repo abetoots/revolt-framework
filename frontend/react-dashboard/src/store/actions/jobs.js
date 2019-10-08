@@ -151,3 +151,35 @@ export const editJob = (formData, jobId, token, jobIndex) => {
             })
     }
 }
+
+export const postJobStart = () => {
+    return {
+        type: actionTypes.POST_JOB_START
+    }
+}
+
+export const postJobSuccess = (jobData, jobIndex) => {
+    return {
+        type: actionTypes.POST_JOB_SUCCESS,
+    }
+}
+
+export const postJobFailed = error => {
+    return {
+        type: actionTypes.POST_JOB_FAILED,
+        error: error
+    }
+}
+
+export const postJob = (formData, token) => {
+    return dispatch => {
+        dispatch(editJobStart());
+        axios.post(`/wp-json/wp/v2/revolt-job-post`, formData, { headers: { "Authorization": "Bearer " + token } })
+            .then(response => {
+                console.log(response);
+            })
+            .catch(error => {
+                console.log(error);
+            })
+    }
+}
