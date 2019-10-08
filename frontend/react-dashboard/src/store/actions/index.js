@@ -2,7 +2,8 @@ export {
     fetchJobs,
     fetchRecentJobs,
     editJob,
-    countApplicants
+    countApplicants,
+    postJob
 } from './jobs';
 
 export {
