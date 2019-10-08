@@ -61,11 +61,10 @@ export const logout = (token) => {
 }
 
 export const checkTokenTimeout = (seconds, token) => {
-    console.log(seconds);
     return dispatch => {
         setTimeout(() => {
             dispatch(logout(token));
-        }, seconds)
+        }, seconds * 1000)
     }
 }
 
@@ -79,9 +78,9 @@ export const authenticateUser = (email, password) => {
         }
         axios.post('/wp-json/simple-jwt-authentication/v1/token', authData)
             .then(response => {
-                console.log(response.data);
                 //default by simple jwt authentication is 7 days
                 const expirationDate = new Date(response.data.token_expires * 1000);
+                console.log(expirationDate);
                 const token = response.data.token;
                 const userId = response.data.user_id;
                 const userName = response.data.username;
