@@ -101,6 +101,7 @@ class Plugin
     public function widget_styles()
     {
         wp_enqueue_style('query-jobs', REVOLT_FRAMEWORK_URL . '/assets/css/query-jobs.css', array(), false, 'all');
+        wp_enqueue_style('category-icons', REVOLT_FRAMEWORK_URL . '/assets/css/category-icons.css', array(), false, 'all');
     }
 
     /**
@@ -114,6 +115,7 @@ class Plugin
     private function include_widgets_files()
     {
         require_once(REVOLT_FRAMEWORK_DIR . 'frontend/elementor-widgets/query_jobs.php');
+        require_once(REVOLT_FRAMEWORK_DIR . 'frontend/elementor-widgets/category_icons.php');
     }
 
     /**
@@ -131,6 +133,7 @@ class Plugin
 
         // Register Widgets
         \Elementor\Plugin::instance()->widgets_manager->register_widget_type(new FrontEnd\Elementor_Widgets\Query_Jobs());
+        \Elementor\Plugin::instance()->widgets_manager->register_widget_type(new FrontEnd\Elementor_Widgets\Category_Icons());
     }
 
 
