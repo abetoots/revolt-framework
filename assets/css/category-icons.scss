@@ -1,0 +1,28 @@
+.CategoryIcons {
+    $self: &;
+    display: flex;
+
+    &__slot {
+        margin: 0 3px;
+        text-align: center;
+
+        //nest to override elementor image defaults
+        #{$self}__image {
+            width: 70px;
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            max-width: 100%;
+            margin: 0 auto;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 15px;
+        }
+
+    }
+
+    &__category {
+        margin: 10px 0;
+        font-size: 12px;
+        font-weight: 600;
+        color: black;
+    }
+}

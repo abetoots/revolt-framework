@@ -1,0 +1,28 @@
+.CategoryIcons {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+.CategoryIcons__slot {
+  margin: 0 3px;
+  text-align: center;
+}
+
+.CategoryIcons__slot .CategoryIcons__image {
+  width: 70px;
+  background-color: rgba(255, 255, 255, 0.2);
+  border-radius: 10px;
+  max-width: 100%;
+  margin: 0 auto;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 15px;
+}
+
+.CategoryIcons__category {
+  margin: 10px 0;
+  font-size: 12px;
+  font-weight: 600;
+  color: black;
+}
+/*# sourceMappingURL=category-icons.css.map */
