@@ -1,6 +1,7 @@
 .CategoryIcons {
     $self: &;
     display: flex;
+    flex-wrap: wrap;
 
     &__slot {
         margin: 0 3px;
