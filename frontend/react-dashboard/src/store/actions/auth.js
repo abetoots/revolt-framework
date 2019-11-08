@@ -94,8 +94,7 @@ export const authenticateUser = (email, password) => {
                 dispatch(checkTokenTimeout((response.data.token_expires * 1000 - new Date().getTime()) / 1000, token));
             })
             .catch(err => {
-                console.log(err);
-                dispatch(authenticationFailedDev('Authentication Failed -dev'));
+                dispatch(authenticationFailedDev(err));
             });
     }
 }

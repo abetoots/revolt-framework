@@ -32,7 +32,7 @@ const authenticationFailed = (state, action) => {
         userRole: '',
         loading: false,
         valid: false,
-        error: action.error
+        error: action.error.message || action.error
     });
 }
 
@@ -44,7 +44,7 @@ const authenticationFailedDev = (state, action) => {
         userRole: '',
         loading: false,
         valid: false,
-        dev: action.error
+        dev: action.error.message || action.error
     });
 }
 
