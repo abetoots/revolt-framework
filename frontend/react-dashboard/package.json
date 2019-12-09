@@ -50,8 +50,5 @@
     "enzyme": "^3.10.0",
     "enzyme-adapter-react-16": "^1.14.0",
     "react-test-renderer": "^16.9.0"
-  },
-  "resolutions": {
-    "eslint": "6.1.0"
   }
 }
