@@ -13,7 +13,7 @@ import taxonomiesReducer from './store/reducers/taxonomies';
 import jobsReducer from './store/reducers/jobs';
 import profileReducer from './store/reducers/profile';
 import candidatesReducer from './store/reducers/candidates';
-import thunk from 'redux-thunk';
+import ReduxThunk from 'redux-thunk';
 
 import './fontawesome';
 import App from './App';
@@ -26,7 +26,7 @@ import 'froala-editor/css/froala_editor.pkgd.min.css';
 import * as serviceWorker from './serviceWorker';
 
 
-const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({ trace: true, traceLimit: 25 }) || compose;
+const composeEnhancers = (typeof window !== 'undefined' && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({ trace: true, traceLimit: 25 })) || compose;
 
 const rootReducer = combineReducers({
     auth: authReducer,
@@ -45,7 +45,7 @@ const withLogoutHandlingReducer = (state, action) => {
 }
 
 const store = createStore(withLogoutHandlingReducer, composeEnhancers(
-    applyMiddleware(thunk)
+    applyMiddleware(ReduxThunk)
 ));
 
 const baseUrl = window.location.hostname === 'localhost' ? '/flerson' : '/flerson.com'
